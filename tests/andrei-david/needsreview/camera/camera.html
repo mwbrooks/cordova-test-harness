@@ -1,0 +1,69 @@
+<!doctype html>
+<title>Camera Test</title>
+<script src="cordova-2.1.0.js"></script>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+  setup({explicit_done: true});
+
+  document.addEventListener("deviceready", function() {
+      test(function() {
+        assert_true(navigator.camera !== undefined && navigator.camera !== null);
+        }, 'Camera (navigator.camera) should exist');
+
+      test(function() {
+        assert_true(typeof navigator.camera.getPicture === 'function' && navigator.camera.getPicture !== null);
+        }, 'Camera (navigator.camera) should contain a getPicture function');
+
+      test(function() {
+        assert_true(window.Camera !== undefined && window.Camera !== null);
+        }, 'Camera constant (window.camera) should exist');
+
+      test(function() {
+        assert_equals(Camera.DestinationType.DATA_URL,0);
+        assert_equals(Camera.DestinationType.FILE_URI,1);
+        }, 'Camera constant (window.camera) should contain two DestinationType constants');
+
+      test(function() {
+        assert_equals(navigator.camera.DestinationType.DATA_URL,0);
+        assert_equals(navigator.camera.DestinationType.FILE_URI,1);
+        }, 'Camera constant (navigator.camera) should contain two DestinationType constants');
+
+      test(function() {
+          assert_equals(Camera.EncodingType.JPEG,0);
+          assert_equals(Camera.EncodingType.PNG,1);
+          }, 'Camera constant (window.camera) should contain two EncodingType constants');
+
+      test(function() {
+          assert_equals(navigator.camera.EncodingType.JPEG,0);
+          assert_equals(navigator.camera.EncodingType.PNG,1);
+          }, 'Camera constant (navigator.camera) should contain two EncodingType constants');
+
+      test(function() {
+          assert_equals(Camera.MediaType.PICTURE,0);
+          assert_equals(Camera.MediaType.VIDEO,1);
+          assert_equals(Camera.MediaType.ALLMEDIA,2);
+          }, 'Camera constant (Camera.MediaType) should contain three MediaType constants');
+
+      test(function() {
+          assert_equals(navigator.camera.MediaType.PICTURE,0);
+          assert_equals(navigator.camera.MediaType.VIDEO,1);
+          assert_equals(navigator.camera.MediaType.ALLMEDIA,2);
+          }, 'Camera constant (navigator.camera) should contain three MediaType constants');
+
+      test(function() {
+          assert_equals(Camera.PictureSourceType.PHOTOLIBRARY,0);
+          assert_equals(Camera.PictureSourceType.CAMERA,1);
+          assert_equals(Camera.PictureSourceType.SAVEDPHOTOALBUM,2);
+          }, 'Camera constant (Camera.PictureSourceType) should contain three PictureSourceType constants');
+
+      test(function() {
+          assert_equals(navigator.camera.PictureSourceType.PHOTOLIBRARY,0);
+          assert_equals(navigator.camera.PictureSourceType.CAMERA,1)
+          assert_equals(navigator.camera.PictureSourceType.SAVEDPHOTOALBUM,2);
+          }, 'Camera constant (navigator.camera.PictureSourceType) should contain three PictureSourceType constants');
+
+      done();
+  }, false);
+</script>

@@ -9,14 +9,25 @@ test(function() {
   assert_true(typeof navigator.contacts !== "undefined");
 }, "Contacts (navigator.contacts) should exist");
 
+var contact;
 test(function() {
-  var contact = new Contact("a", "b", new ContactName("a", "b", "c", "d", "e", "f"), "c", [], [], [], [], [], "f", "i", [], [], []);  
+  contact = new Contact("a", "b", new ContactName("a", "b", "c", "d", "e", "f"), "c", [], [], [], [], [], "f", "i", [], [], []);  
   assert_true(typeof contact !== "undefined");  
-  
+
+  test_Contact(contact);
+    
+}, "should be able to create a Contact instance");
+
+function test_Contact(contact) {
   test(function() {
   	assert_true(typeof contact.save !== "undefined");
   	assert_true(typeof contact.save === "function");
   }, "Contact.save should be a function");
+
+  test(function() {
+  	assert_true(typeof contact.remove !== "undefined");
+  	assert_true(typeof contact.remove === "function");
+  }, "Contact.remove should be a function");
   
   test(function() {
   	assert_true(contact.id === "a");
@@ -73,109 +84,215 @@ test(function() {
   test(function() {
   	assert_true(typeof contact.urls !== "undefined");
   }, "Contact.urls should be exist");
+}
+
+var contactName;
+test(function() {
+  contactName = new ContactName("Dr. First Last Jr.", "Last", "First", "Middle", "Dr.", "Jr.");
+  assert_true(typeof contactName !== "undefined");  
+
+  test_ContactName(contactName);
   
-}, "should be able to create a Contact instance");
-/*
+}, "should be able to create a ContactName instance");
 
-    describe("Contact object", function () {
-        it("should be able to create instance", function() {
-            var contact = new Contact("a", "b", new ContactName("a", "b", "c", "d", "e", "f"), "c", [], [], [], [], [], "f", "i",
-                [], [], []);
-        });
+function test_ContactName(contactName) {
+  test(function() {
+  	assert_true(contactName.formatted === "Dr. First Last Jr.");
+  }, "ContactName.formatted should be 'Dr. First Last Jr.'");
 
-        it("should be able to define a ContactName object", function() {
-            var contactName = new ContactName("Dr. First Last Jr.", "Last", "First", "Middle", "Dr.", "Jr.");
-            expect(contactName).toBeDefined();
-            expect(contactName.formatted).toBe("Dr. First Last Jr.");
-            expect(contactName.familyName).toBe("Last");
-            expect(contactName.givenName).toBe("First");
-            expect(contactName.middleName).toBe("Middle");
-            expect(contactName.honorificPrefix).toBe("Dr.");
-            expect(contactName.honorificSuffix).toBe("Jr.");
-        });
+  test(function() {
+  	assert_true(contactName.familyName === "Last");
+  }, "ContactName.familyName should be 'Last'");
 
-        it("should be able to define a ContactField object", function() {
-            var contactField = new ContactField("home", "8005551212", true);
-            expect(contactField).toBeDefined();
-            expect(contactField.type).toBe("home");
-            expect(contactField.value).toBe("8005551212");
-            expect(contactField.pref).toBe(true);
-        });
+  test(function() {
+  	assert_true(contactName.givenName === "First");
+  }, "ContactName.givenName should be 'First'");
 
-        it("ContactField object should coerce type and value properties to strings", function() {
-            var contactField = new ContactField(12345678, 12345678, true);
-            expect(contactField.type).toBe("12345678");
-            expect(contactField.value).toBe("12345678");
-        });
+  test(function() {
+  	assert_true(contactName.middleName === "Middle");
+  }, "ContactName.middleName should be 'Middle'");
+  
+  test(function() {
+  	assert_true(contactName.honorificPrefix === "Dr.");
+  }, "ContactName.honorificPrefix should be 'Dr.'");
 
-        it("should be able to define a ContactAddress object", function() {
-            var contactAddress = new ContactAddress(true, "home", "a","b","c","d","e","f");
-            expect(contactAddress).toBeDefined();
-            expect(contactAddress.pref).toBe(true);
-            expect(contactAddress.type).toBe("home");
-            expect(contactAddress.formatted).toBe("a");
-            expect(contactAddress.streetAddress).toBe("b");
-            expect(contactAddress.locality).toBe("c");
-            expect(contactAddress.region).toBe("d");
-            expect(contactAddress.postalCode).toBe("e");
-            expect(contactAddress.country).toBe("f");
-        });
+  test(function() {
+  	assert_true(contactName.honorificSuffix === "Jr.");
+  }, "ContactName.honorificSuffix should be 'Jr.'");
+}
 
-        it("should be able to define a ContactOrganization object", function() {
-            var contactOrg = new ContactOrganization(true, "home", "a","b","c","d","e","f","g");
-            expect(contactOrg).toBeDefined();
-            expect(contactOrg.pref).toBe(true);
-            expect(contactOrg.type).toBe("home");
-            expect(contactOrg.name).toBe("a");
-            expect(contactOrg.department).toBe("b");
-            expect(contactOrg.title).toBe("c");
-        });
+var contactField;
+test(function() {
+  contactField = new ContactField("home", "8005551212", true);  
+  assert_true(typeof contactField !== "undefined");
 
-        it("should be able to define a ContactFindOptions object", function() {
-            var contactFindOptions = new ContactFindOptions("a", true, "b");
-            expect(contactFindOptions).toBeDefined();
-            expect(contactFindOptions.filter).toBe("a");
-            expect(contactFindOptions.multiple).toBe(true);
-        });
+  test_ContactField(contactField);
+  
+  var field = new ContactField(12345678, 12345678, true);
 
-        it("should contain a clone function", function() {
-            var contact = new Contact();
-            expect(contact.clone).toBeDefined();
-            expect(typeof contact.clone).toBe('function');
-        });
+  test(function() {
+  	assert_true(field.type === "12345678");
+  }, "ContactField.type should be converted to the string '12345678'");
 
-        it("clone function should make deep copy of Contact Object", function() {
-            var contact = new Contact();
-            contact.id=1;
-            contact.displayName="Test Name";
-            contact.nickname="Testy";
-            contact.gender="male";
-            contact.note="note to be cloned";
-            contact.name = new ContactName("Mr. Test Name");
+  test(function() {
+  	assert_true(field.value === "12345678");
+  }, "ContactField.value should be converted to the string '12345678'");
 
-            var clonedContact = contact.clone();
+}, "should be able to create a ContactField instance");
 
-            expect(contact.id).toBe(1);
-            expect(clonedContact.id).toBe(null);
-            expect(clonedContact.displayName).toBe(contact.displayName);
-            expect(clonedContact.nickname).toBe(contact.nickname);
-            expect(clonedContact.gender).toBe(contact.gender);
-            expect(clonedContact.note).toBe(contact.note);
-            expect(clonedContact.name.formatted).toBe(contact.name.formatted);
-            expect(clonedContact.connected).toBe(contact.connected);
-        });
+function test_ContactField(contactField) {
+  test(function() {
+  	assert_true(contactField.type === "home");
+  }, "ContactField.type should be 'home'");
 
-        it("should contain a save function", function() {
-            var contact = new Contact();
-            expect(contact.save).toBeDefined();
-            expect(typeof contact.save).toBe('function');
-        });
+  test(function() {
+  	assert_true(contactField.value === "8005551212");
+  }, "ContactField.value should be '8005551212'");
 
-        it("should contain a remove function", function() {
-            var contact = new Contact();
-            expect(contact.remove).toBeDefined();
-            expect(typeof contact.remove).toBe('function');
-        });
-    });
-*/
+  test(function() {
+  	assert_true(contactField.pref === true);
+  }, "ContactField.pref should be true");
+}
+
+var contactAddress;
+test(function() {
+  contactAddress = new ContactAddress(true, "home", "a","b","c","d","e","f");
+  assert_true(typeof contactAddress !== "undefined");
+
+  test_ContactAddress(contactAddress);
+
+}, "should be able to create a ContactAddress instance");
+
+function test_ContactAddress(contactAddress) {
+  test(function() {
+  	assert_true(contactAddress.pref === true);
+  }, "ContactAddress.pref should be true");
+      
+  test(function() {
+  	assert_true(contactAddress.type === "home");
+  }, "ContactAddress.type should be 'home'");
+
+  test(function() {
+  	assert_true(contactAddress.formatted === "a");
+  }, "ContactAddress.formatted should be 'a'");
+
+  test(function() {
+  	assert_true(contactAddress.streetAddress === "b");
+  }, "ContactAddress.streetAddress should be 'b'");
+
+  test(function() {
+  	assert_true(contactAddress.locality === "c");
+  }, "ContactAddress.locality should be 'c'");
+
+  test(function() {
+  	assert_true(contactAddress.region === "d");
+  }, "ContactAddress.region should be 'd'");
+
+  test(function() {
+  	assert_true(contactAddress.postalCode === "e");
+  }, "ContactAddress.postalCode should be 'e'");
+
+  test(function() {
+  	assert_true(contactAddress.country === "f");
+  }, "ContactAddress.country should be 'f'");  
+}
+
+var contactOrg;
+test(function() {
+  contactOrg = new ContactOrganization(true, "home", "a","b","c","d","e","f","g");
+  assert_true(typeof contactOrg !== "undefined");
+  
+  test_ContactOrganization(contactOrg);
+  
+}, "should be able to create a ContactOrganization instance");
+
+function test_ContactOrganization(contactOrg) {
+
+  test(function() {
+  	assert_true(contactOrg.pref === true);
+  }, "ContactOrg.pref should be true");
+      
+  test(function() {
+  	assert_true(contactOrg.type === "home");
+  }, "ContactOrg.type should be 'home'");
+
+  test(function() {
+  	assert_true(contactOrg.name === "a");
+  }, "ContactOrg.name should be 'a'");
+
+  test(function() {
+  	assert_true(contactOrg.department === "b");
+  }, "ContactOrg.department should be 'b'");
+
+  test(function() {
+  	assert_true(contactOrg.title === "c");
+  }, "ContactOrg.title should be 'c'");
+}
+
+test(function() {
+  var contactFindOptions = new ContactFindOptions("a", true, "b");
+  assert_true(typeof contactFindOptions !== "undefined");
+
+  test(function() {
+  	assert_true(contactFindOptions.filter === 'a');
+  }, "ContactFindOptions.filter should be 'a'");
+      
+  test(function() {
+  	assert_true(contactFindOptions.multiple === true);
+  }, "ContactFindOptions.multiple should be true");
+
+}, "should be able to create a ContactFindOptions instance");
+
+test(function() {
+  var contact = new Contact();
+  assert_true(typeof contact.clone === "function");
+  
+}, "Contact.clone should be function");
+
+test(function() {
+  var contact = new Contact();
+  contact.id=1;
+  contact.displayName="Test Name";
+  contact.nickname="Testy";
+  contact.gender="male";
+  contact.note="note to be cloned";
+  contact.name = new ContactName("Mr. Test Name");
+
+  var clonedContact = contact.clone();
+  assert_true(typeof clonedContact !== "undefined");
+
+  test(function() {
+  	assert_true(contact.id === 1);
+  }, "Contact.id should be 1");
+  
+  test(function() {
+  	assert_true(clonedContact.id === null);
+  }, "ClonedContact.id should be null");
+
+  test(function() {
+  	assert_true(clonedContact.displayName === contact.displayName);
+  }, "ClonedContact.displayName should be contact.displayName");
+
+  test(function() {
+  	assert_true(clonedContact.nickname === contact.nickname);
+  }, "ClonedContact.nickname should be contact.nickname");
+
+  test(function() {
+  	assert_true(clonedContact.gender === contact.gender);
+  }, "ClonedContact.gender should be contact.gender");
+
+  test(function() {
+  	assert_true(clonedContact.note === contact.note);
+  }, "ClonedContact.note should be contact.note");
+
+  test(function() {
+  	assert_true(clonedContact.name.formatted === contact.name.formatted);
+  }, "ClonedContact.name.formatted should be contact.name.formatted");
+
+  test(function() {
+  	assert_true(clonedContact.connected === contact.connected);
+  }, "ClonedContact.connected should be contact.connected");
+  
+}, "Contact.clone function should make deep copy of Contact Object");
+
 </script>

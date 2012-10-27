@@ -1,0 +1,92 @@
+<!doctype html>
+<title>Simple Test</title>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<script src="cordova-2.1.0.js"></script>
+<div id="log"></div>
+
+<script>
+setup({explicit_done:true});
+
+function runAll () {
+    /**
+     * Utility: invokes done() on the async test and resets the id
+     */
+    function onDone (async_test, id) {
+        async_test.done();
+        navigator.accelerometer.clearWatch(id);
+    }
+
+    test(function() {
+        assert_true(navigator.accelerometer.clearWatch !== undefined);
+        assert_true(typeof navigator.accelerometer.clearWatch == 'function');
+    }, "clearWatch should exist");
+  
+
+    var clearWatchTest = async_test("clearWatch - should clear an existing watch");
+
+    hasValidParamTest.step(function () {
+        var id;
+    
+        var success = hasValidParamTest.step_func(function (a) {
+            try {
+                assert_true(a !== undefined, 'success callback should have a parameter');
+                assert_true(a.x !== undefined, 'accelerometer data should have an x parameter');
+                assert_true(typeof a.x === 'number', 'accelerometer x parameter should be a number');
+                assert_true(a.y !== undefined, 'accelerometer data should have an y parameter');
+                assert_true(typeof a.y === 'number', 'accelerometer y parameter should be a number');
+                assert_true(a.z !== undefined, 'accelerometer data should have an z parameter');
+                assert_true(typeof a.z === 'number', 'accelerometer z parameter should be a number');
+                assert_true(a.timestamp !== undefined, 'accelerometer data should have a timestamp parameter');
+                assert_true(typeof a.timestamp === 'number', 'accelerometer timestamp parameter should be a number');
+            } finally {
+                onDone(hasValidParamTest, id);
+            }
+        });
+    
+        var failure = hasValidParamTest.step_func(function (a) {
+            try { 
+                assert_true(false, 'watchAcceleration should not fail');
+            } finally {
+                onDone(hasValidParamTest, id);
+            }
+        });
+    
+        id = navigator.accelerometer.watchAcceleration(success, failure, {frequency: 500});
+    });
+    
+    done();
+}
+
+describe("clearWatch", function() {
+    it("should exist", function() {
+        expect(navigator.accelerometer.clearWatch).toBeDefined();
+        expect(typeof navigator.accelerometer.clearWatch == 'function').toBe(true);
+    });
+
+    it("should clear an existing watch", function() {
+        var id,
+            win = jasmine.createSpy();
+
+        runs(function() {
+            id = navigator.accelerometer.watchAcceleration(win, function() {}, {frequency:100});
+        });
+
+        waitsFor(function () { return win.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+        runs(function() {
+            win.reset();
+            navigator.accelerometer.clearWatch(id);
+        });
+
+        waits(201);
+
+        runs(function() {
+            expect(win).not.toHaveBeenCalled();
+        });
+    });
+});
+
+document.addEventListener("deviceready", runAll);
+
+</script>

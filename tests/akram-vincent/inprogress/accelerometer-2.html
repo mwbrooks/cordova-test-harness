@@ -1,10 +1,12 @@
 <!doctype html>
 <title>Simple Test</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<script src="cordova-2.1.0.js"></script>
 <div id="log"></div>
 
 <script>
+setup({explicit_done:true});
 
 function runAll () {
     /**
@@ -27,22 +29,27 @@ function runAll () {
         var id;
     
         var success = hasValidParamTest.step_func(function (a) {
-            assert_true(a !== undefined, 'success callback should have a parameter');
-            assert_true(a.x !== undefined, 'accelerometer data should have an x parameter');
-            assert_true(typeof a.x === 'number', 'accelerometer x parameter should be a number');
-            assert_true(a.y !== undefined, 'accelerometer data should have an y parameter');
-            assert_true(typeof a.y === 'number', 'accelerometer y parameter should be a number');
-            assert_true(a.z !== undefined, 'accelerometer data should have an z parameter');
-            assert_true(typeof a.z === 'number', 'accelerometer z parameter should be a number');
-            assert_true(a.timestamp !== undefined, 'accelerometer data should have a timestamp parameter');
-            assert_true(typeof a.timestamp === 'number', 'accelerometer timestamp parameter should be a number');
-        
-            onDone(hasValidParamTest, id);
+            try {
+                assert_true(a !== undefined, 'success callback should have a parameter');
+                assert_true(a.x !== undefined, 'accelerometer data should have an x parameter');
+                assert_true(typeof a.x === 'number', 'accelerometer x parameter should be a number');
+                assert_true(a.y !== undefined, 'accelerometer data should have an y parameter');
+                assert_true(typeof a.y === 'number', 'accelerometer y parameter should be a number');
+                assert_true(a.z !== undefined, 'accelerometer data should have an z parameter');
+                assert_true(typeof a.z === 'number', 'accelerometer z parameter should be a number');
+                assert_true(a.timestamp !== undefined, 'accelerometer data should have a timestamp parameter');
+                assert_true(typeof a.timestamp === 'number', 'accelerometer timestamp parameter should be a number');
+            } finally {
+                onDone(hasValidParamTest, id);
+            }
         });
     
         var failure = hasValidParamTest.step_func(function (a) {
-            assert_true(false, 'watchAcceleration should not fail');
-            onDone(hasValidParamTest, id);
+            try { 
+                assert_true(false, 'watchAcceleration should not fail');
+            } finally {
+                onDone(hasValidParamTest, id);
+            }
         });
     
         id = navigator.accelerometer.watchAcceleration(success, failure, {frequency: 500});
@@ -55,14 +62,17 @@ function runAll () {
         var reasonableThreshold = 15,
             id;
     
-        var success = wat.step_func(function (a) {
-            assert_true(a.x < reasonableThreshold);
-            assert_true(a.x > reasonableThreshold * -1);
-            assert_true(a.y < reasonableThreshold);
-            assert_true(a.y > reasonableThreshold * -1);
-            assert_true(a.z < reasonableThreshold);
-            assert_true(a.z > reasonableThreshold * -1);
-            onDone(hasReasonableParam, id);
+        var success = hasReasonableParam.step_func(function (a) {
+            try {
+                assert_true(a.x < reasonableThreshold);
+                assert_true(a.x > reasonableThreshold * -1);
+                assert_true(a.y < reasonableThreshold);
+                assert_true(a.y > reasonableThreshold * -1);
+                assert_true(a.z < reasonableThreshold);
+                assert_true(a.z > reasonableThreshold * -1);
+            } finally {    
+                onDone(hasReasonableParam, id);
+            }
         });
     
         var failure = hasReasonableParam.step_func(function (a) {
@@ -85,21 +95,28 @@ function runAll () {
         var reasonableTimeLimit = veryRecently + 5000; // 5 seconds from now
     
         var success = hasRecentTimestamp.step_func(function (a) {
-            assert_true(a.timestamp > veryRecently);
-            assert_true(a.timestamp < reasonableTimeLimit);
-        
-            onDone(hasRecentTimestamp, id);
+            try {
+                assert_true(a.timestamp > veryRecently);
+                assert_true(a.timestamp < reasonableTimeLimit);
+            } finally {
+                onDone(hasRecentTimestamp, id);
+            }
         });
     
         var failure = hasRecentTimestamp.step_func(function (a) {
-            assert_true(true == false, 'watchAcceleration should not fail');
-            onDone(hasRecentTimestamp, id);
+            try {
+                assert_true(true == false, 'watchAcceleration should not fail');
+            } finally {
+                onDone(hasRecentTimestamp, id);
+            }
         });
     
         id = navigator.accelerometer.watchAcceleration(success, failure, {frequency: 500});
     });
+    
+    done();
 }
 
-document.ondeviceready = runAll;
+document.addEventListener("deviceready", runAll);
 
 </script>

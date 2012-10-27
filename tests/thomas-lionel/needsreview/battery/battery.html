@@ -1,16 +1,21 @@
 <!doctype html>
-<title>Battery test</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
+<title>PhoneGap Battery test</title>
+<script src="cordova-2.1.0.js"></script>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
 <div id="log"></div>
 <script>
+  setup({explicit_done: true});
 
-document.addEventListener("deviceready",
-  function() {
+  document.addEventListener("deviceready", function() {
+
+    /* Here put you (a)synchronous tests */
     test(function() {
       assert_true(typeof navigator.battery !== "undefined");
-    }, "Battery (navigator.battery) should exist"),
-  false);
+    }, "Battery (navigator.battery) should exist");
+    /* End your tests here */
 
+    // Now it's time to call the final done()
+    done();
+  }, false);
 </script>

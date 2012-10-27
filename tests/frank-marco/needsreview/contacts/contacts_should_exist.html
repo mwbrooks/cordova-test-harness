@@ -1,33 +1,23 @@
 <!DOCTYPE html>
-<html>
 <head>
-  <title>Contacts API Specs</title>
-  <meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1.0;" />
+    <!--
+  See James' slides for more details: http://hoppipolla.co.uk/talks/ttwf/testharness.html
+  -->
 
-  <!-- Test Runner -->
-  <script src="/resources/testharness.js"></script>
-  <script src="/resources/testharnessreport.js"></script>
-</head>
-<body>
-  <div id="log"></div>
-  <!--
-    REMOVE THIS
-
-    TESTHARNESS.JS API:
-
-      http://hoppipolla.co.uk/talks/ttwf/testharness.html
-
-    IMPORTANT:
-
-      Create a symbolic link from your hard drive root directory to the 
-      Dropbox /HTML5/ so that the testharness.js reference above works 
-      without changes.
-      For example:
-        sudo ln -s ~/Dropbox/TestTWF/MOBILE/resources /resources
+    <!--
+    IMPORTANT: Create a symbolic link from your hard drive root directory to the
+               Dropbox /HTML5/ so that the testharness.js reference above works
+               without changes.
+               For example:
+               ln -s ~/Dropbox/TestTWF/MOBILE/resources /resources
     -->
-    <script type="text/javascript">
 
-/* Contacts (navigator.contacts) match WebIDL */
+    <title>Simple Test</title>
+    <script src="/resources/testharness.js"></script>
+    <script src="/resources/testharnessreport.js"></script>
+    <script>
+
+        /* Contacts (navigator.contacts) match WebIDL */
 
         test(function () {
             assert_idl_attribute(navigator, 'contacts', '');
@@ -110,6 +100,11 @@
 
 
         }, "Contacts (navigator.contacts) should exist");
+
     </script>
+</head>
+<body>
+<div id="log"></div>
 </body>
-</html>
+
+

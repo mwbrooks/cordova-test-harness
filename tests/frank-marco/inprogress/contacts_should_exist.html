@@ -17,90 +17,157 @@
     <script src="/resources/testharnessreport.js"></script>
     <script>
 
+        var gContactObj = null;
+        var removeContact = function () {
+            if (gContactObj) {
+                gContactObj.remove(function () {
+                }, function () {
+                    console.log("[CONTACTS ERROR]: removeContact cleanup method failed to clean up test artifacts.");
+                });
+                gContactObj = null;
+            }
+        };
         /* Contacts (navigator.contacts) match WebIDL */
 
-        test(function () {
-            assert_idl_attribute(navigator, 'contacts', '');
-        }, "Contacts (navigator.contacts) match WebIDL");
-
-        /* Contacts (navigator.contacts) should exist */
-
-        test(function () {
-            assert_true(typeof navigator.contacts !== 'undefined');
-            assert_true(typeof navigator.contacts === 'object');
-
-            /* should contain a find function */
-
-            test(function () {
-                assert_true(typeof navigator.contacts.find !== 'undefined');
-                assert_true(typeof navigator.contacts.find === 'function');
-                assert_own_property(navigator.contacts, 'find', '');
-            }, "should contain a find function");
-
-            /* has Object ContactFindOptions */
-
-            test(function () {
-                assert_true(ContactFindOptions !== 'undefined');
-                assert_true(typeof ContactFindOptions === 'function');
-                assert_own_property(window, 'ContactFindOptions', '');
-            }, "has Object ContactFindOptions");
-
-            /*contacts should find something and call success callback*/
-
-            var findTest = async_test("contacts should find something and call success callback");
-            var fail = findTest.step_func(function () {
-                assert_unreached("find failed");
-            });
-            var win = findTest.step_func(function (result) {
                 test(function () {
+                    assert_idl_attribute(navigator, 'contacts', '');
+                }, "Contacts (navigator.contacts) match WebIDL");
+
+                /* Contacts (navigator.contacts) should exist */
+
+                test(function () {
+                    assert_true(typeof navigator.contacts !== 'undefined');
+                    assert_true(typeof navigator.contacts === 'object');
+
+                    /* should contain a find function */
+
+                    test(function () {
+                        assert_true(typeof navigator.contacts.find !== 'undefined');
+                        assert_true(typeof navigator.contacts.find === 'function');
+                        assert_own_property(navigator.contacts, 'find', '');
+                    }, "should contain a find function");
+
+                    /* has Object ContactFindOptions */
+
+                    test(function () {
+                        assert_true(ContactFindOptions !== 'undefined');
+                        assert_true(typeof ContactFindOptions === 'function');
+                        assert_own_property(window, 'ContactFindOptions', '');
+                    }, "has Object ContactFindOptions");
+
+                    /*contacts should find something and call success callback*/
+
+                    var findTest = async_test("contacts should find something and call success callback");
+                    var fail = findTest.step_func(function () {
+                        assert_unreached("find failed");
+                    });
+                    var win = findTest.step_func(function (result) {
+                        assert_true(result !== 'undefined');
+                        assert_true(Array.isArray(result));
+                        findTest.done();
+                    });
+
+                    findTest.step(function () {
+                        obj = new ContactFindOptions();
+                        obj.filter = "";
+                        obj.multiple = true;
+                        navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], win, fail, obj);
+                    });
+
+                    /*should throw an exception if success callback is empty*/
+
+                    // what kind of exception?!
+
+                    test(function () {
+                        assert_throws("NOT_FOUND_ERR", function () {
+                            var fail = function () {
+                            };
+                            var obj = new ContactFindOptions();
+                            obj.filter = "";
+                            obj.multiple = true;
+                            navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], null, fail, obj);
+                        });
+                    }, "should throw an exception if success callback is empty");
+
+                    /* error callback should be called when no fields are specified */
+
+                    var findTest2 = async_test("error callback should be called when no fields are specified");
+                    var fail = findTest2.step_func(function () {
+                        findTest2.done();
+                    });
+                    var win = findTest2.step_func(function (result) {
+                        assert_unreached("success callback was called");
+                    });
+
+                    findTest2.step(function () {
+                        obj = new ContactFindOptions();
+                        obj.filter = "";
+                        obj.multiple = true;
+                        navigator.contacts.find([], win, fail, obj);
+                    });
+
+                }, "Contacts (navigator.contacts) should exist");
+
+        /* with newly-created contact */
+
+        test(function () {
+            removeContact();
+
+            var createPart = async_test("create a new contact");
+
+            var test = createPart.step_func(function () {
+                var find = async_test("should be able to find a contact by name");
+
+                var foundName = function (result) {
+                    var bFound = false;
+                    try {
+                        for (var i = 0; i < result.length; i++) {
+                            if (result[i].name.familyName == "Delete") {
+                                bFound = true;
+                                break;
+                            }
+                        }
+                    } catch (e) {
+                        return false;
+                    }
+                    return bFound;
+                };
+
+                var findWin = find.step_func(function (result) {
                     assert_true(result !== 'undefined');
                     assert_true(Array.isArray(result));
-                }, "success callback should be called with an array");
-                findTest.done();
-            });
-
-            findTest.step(function () {
-                obj = new ContactFindOptions();
-                obj.filter = "";
-                obj.multiple = true;
-                navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], win, fail, obj);
-            });
-
-            /*should throw an exception if success callback is empty*/
-
-            test(function () {
-                assert_throws("NOT_FOUND_ERR", function () {
-                    var fail = function () {
-                    };
-                    var obj = new ContactFindOptions();
-                    obj.filter = "";
-                    obj.multiple = true;
-                    navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], null, fail, obj);
+                    assert_true(result.length > 1);
+                    assert_true(foundName(result));
+                    find.done();
                 });
-            }, "should throw an exception if success callback is empty");
 
-            /* error callback should be called when no fields are specified */
+                var findFail = find.step_func(function (result) {
+                    assert_unreached("find the new created contact failed");
+                });
 
-            var findTest2 = async_test("error callback should be called when no fields are specified");
-            var fail = findTest2.step_func(function () {
-                findTest2.done();
-            });
-            var win = findTest2.step_func(function (result) {
-                assert_unreached("success callback was called");
-            });
-
-            findTest2.step(function () {
-                obj = new ContactFindOptions();
-                obj.filter = "";
-                obj.multiple = true;
-                navigator.contacts.find([], win, fail, obj);
+                find.step(function () {
+                    obj = new ContactFindOptions();
+                    obj.filter = "Delete";
+                    obj.multiple = true;
+                    navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], findWin, findFail, obj);
+                });
+                createPart.done();
             });
 
-            /* with newly-created contact */
+            var fail = createPart.step_func(function (result) {
+                assert_unreached("creating a contact failed");
+            });
+
+            createPart.step(function () {
+                gContactObj = new Contact();
+                gContactObj.name = new ContactName();
+                gContactObj.name.familyName = "Delete";
+                gContactObj.save(test, fail);
+            });
 
 
+        }, "find newly-created contact");
 
-        }, "Contacts (navigator.contacts) should exist");
 
     </script>
 </head>

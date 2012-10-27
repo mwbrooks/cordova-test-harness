@@ -14,44 +14,45 @@ test(function() {
   assert_true(typeof navigator.contacts.create === "function");
 }, "Contacts (navigator.contacts.create) should a function");
 
-var obj;
 test(function() {
   var bDay = new Date(1976, 7,4);
-  obj = navigator.contacts.create({"displayName": "test name", "gender": "male", "note": "my note", "name": {"formatted": "Mr. Test Name"}, "emails": [{"value": "here@there.com"}, {"value": "there@here.com"}], "birthday": bDay});
-  assert_true(typeof obj !== "undefined");
+  var contact = navigator.contacts.create({"displayName": "test name", "gender": "male", "note": "my note", "name": {"formatted": "Mr. Test Name"}, "emails": [{"value": "here@there.com"}, {"value": "there@here.com"}], "birthday": bDay});
+  assert_true(typeof contact !== "undefined");
+
+  test(function() {
+    assert_true(contact.displayName === 'test name');
+  }, "Contact.displayName should hold 'test name'");
+
+  test(function() {
+    assert_true(contact.note === 'my note');
+  }, "Contact.note should hold 'my note'");
+
+  test(function() {
+    assert_true(contact.name.formatted === 'Mr. Test Name');
+  }, "Contact.name.formatted should hold 'Mr. Test Name'");
+
+  test(function() {
+    assert_true(contact.emails.length === 2);
+  }, "Contact.emails should hold 2 emails");
+
+  test(function() {
+    assert_true(contact.emails[0].value === 'here@there.com');
+  }, "Contact.emails[0] should hold 'here@there.com'");
+
+  test(function() {
+    assert_true(contact.emails[1].value === 'there@here.com');
+  }, "Contact.emails[1] should hold 'there@here.com'");
+
+  test(function() {
+    assert_true(contact.nickname === null);
+  }, "Contact.nickname should be null");
+
+  test(function() {
+    var bDay = new Date(1976, 7,4);
+    assert_true(contact.birthday.getTime() == bDay.getTime());
+  }, "Contact.birthday should be bDay");
+
 }, "Contacts.create should return a Contact object");
 
-test(function() {
-  assert_true(obj.displayName === 'test name');
-}, "Contact.displayName should hold 'test name'");
-
-test(function() {
-  assert_true(obj.note === 'my note');
-}, "Contact.note should hold 'my note'");
-
-test(function() {
-  assert_true(obj.name.formatted === 'Mr. Test Name');
-}, "Contact.name.formatted should hold 'Mr. Test Name'");
-
-test(function() {
-  assert_true(obj.emails.length === 2);
-}, "Contact.emails should hold 2 emails");
-
-test(function() {
-  assert_true(obj.emails[0].value === 'here@there.com');
-}, "Contact.emails[0] should hold 'here@there.com'");
-
-test(function() {
-  assert_true(obj.emails[1].value === 'there@here.com');
-}, "Contact.emails[1] should hold 'there@here.com'");
-
-test(function() {
-  assert_true(obj.nickname === null);
-}, "Contact.nickname should be null");
-
-test(function() {
-  var bDay = new Date(1976, 7,4);
-  assert_true(obj.birthday.getTime() == bDay.getTime());
-}, "Contact.birthday should be bDay");
 
 </script>

@@ -1,93 +1,36 @@
 <!doctype html>
-<title>Simple Test</title>
-
-
-<script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
-
-<script src="resources\testharness.js"></script>
-<script src="resources\testharnessreport.js"></script>
-
-
-
+<title>PhoneGap Network test</title>
+<script src="cordova-2.1.0.js"></script>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
 <div id="log"></div>
-
-<!--
-  See James' slides for more details: http://hoppipolla.co.uk/talks/ttwf/testharness.html
-  -->
-  
-<!--
-  IMPORTANT: Create a symbolic link from your hard drive root directory to the 
-             Dropbox /HTML5/ so that the testharness.js reference above works 
-             without changes.
-             For example:
-             ln -s ~/Dropbox/TestTWF/MOBILE/resources /resources
-  -->
-  
 <script>
-	
-	
-	
-	// Wait for Cordova to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
+  setup({explicit_done: true});
 
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-    }
+  document.addEventListener("deviceready", function() {
 
-    // onSuccess: Get the current heading
-    //
-    function onSuccess(heading) {
-        //alert('Heading: ' + heading.magneticHeading);
-    }
+    test(function() {
+      assert_true(typeof navigator.network !== "undefined");
+    }, "Network (navigator.network) should exist");
 
-    // onError: Failed to get the heading
-    //
-    function onError(compassError) {
-        alert('Error: ' + compassError.code);
-    }
-    
+    test(function() {
+      assert_true(typeof navigator.network.connection !== "undefined");
+    }, "Connection (navigator.network.connection) should exist");
 
-	
-	var stTest = async_test("Network (navigator.network) should exist");
-	setTimeout(function () {
-		    stTest.step(function () {
-				assert_true(typeof navigator.network !== "undefined");
-			});
-		stTest.done();
-	});
+    test(function() {
+      assert_true(typeof navigator.network.connection.type !== "undefined");
+    }, "Connection (navigator.network.connection) should contain connection properties");
 
-	var stTest2 = async_test("Connection (navigator.network.connection) should exist");
-	setTimeout(function () {
-		    stTest2.step(function () {
-				assert_true(typeof navigator.network.connection !== "undefined");
-			});
-		stTest2.done();
-	});
+    test(function() {
+      assert_equals(Connection.UNKNOWN, "unknown");
+      assert_equals(Connection.ETHERNET, "ethernet");
+      assert_equals(Connection.WIFI, "wifi");
+      assert_equals(Connection.CELL_2G, "2g");
+      assert_equals(Connection.CELL_3G, "3g");
+      assert_equals(Connection.CELL_4G, "4g");
+      assert_equals(Connection.NONE, "none");
+    }, "Network information API should define constants for connection status");
 
-	var stTest3 = async_test("Connection (navigator.network.connection) should contain connection properties");
-	setTimeout(function () {
-		    stTest3.step(function () {
-				assert_true(typeof navigator.network.connection.type !== "undefined");
-			});
-		stTest3.done();
-	});
-
-
-var stTest4 = async_test("Network information API should define constants for connection status");
-	setTimeout(function () {
-		    stTest4.step(function () {
-			  assert_equals(Connection.UNKNOWN, "unknown");
-			  assert_equals(Connection.ETHERNET, "ethernet");
-			  assert_equals(Connection.WIFI, "wifi");
-			  assert_equals(Connection.CELL_2G, "2g");
-			  assert_equals(Connection.CELL_3G, "3g");
-			  assert_equals(Connection.CELL_4G, "4g");
-			  assert_equals(Connection.NONE, "none");
-			});
-		stTest4.done();
-	});
-
-
+    done();
+  }, false);
 </script>

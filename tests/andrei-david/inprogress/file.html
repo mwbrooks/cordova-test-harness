@@ -59,12 +59,6 @@
       }, error);
   };
 
-  var createFail = function(module) {
-      return jasmine.createSpy().andCallFake(function(err) {
-          console.log('[ERROR ' + module + '] ' + JSON.stringify(err));
-      });
-  };
-
   var createWin = function(module) {
       return jasmine.createSpy().andCallFake(function() {
           console.log('[ERROR ' + module + '] Unexpected success callback');
@@ -95,9 +89,36 @@
       assert_true(window.requestFileSystem !== undefined && window.requestFileSystem !== null);
   }, 'File API LocalFileSystem window.requestFileSystem should be defined');
 
-  test(function(){
+  var hasPersistentFilesystem = async_test('File API LocalFileSystem window.requestFileSystem should be able to retrieve a PERSISTENT file system');
+  hasPersistentFilesystem.step(function(){
+    var win = hasPersistentFilesystem.step_func(function(fileSystem){
+      assert_true(fileSystem !== undefined && fileSystem !== null);
+      assert_true(fileSystem.name !== undefined && fileSystem.name !== null);
+      assert_equals(fileSystem.name, "persistent");
+      assert_true(fileSystem.root !== undefined);
+      hasPersistentFilesystem.done();
+    });
+    var fail = hasPersistentFilesystem.step_func(function(module) {
+      assert_true(false, 'hasPersistentFilesystem should not fail');
+      hasPersistentFilesystem.done();
+    });
+    var id =  window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, win, fail);
+  });
 
-  }, 'File API LocalFileSystem window.requestFileSystem should be able to retrieve a PERSISTENT file system');
-
+  var hasPersistentFilesystem = async_test('File API LocalFileSystem window.requestFileSystem should be able to retrieve a PERSISTENT file system');
+  hasPersistentFilesystem.step(function(){
+    var win = hasPersistentFilesystem.step_func(function(fileSystem){
+      assert_true(fileSystem !== undefined && fileSystem !== null);
+      assert_true(fileSystem.name !== undefined && fileSystem.name !== null);
+      assert_equals(fileSystem.name, "persistent");
+      assert_true(fileSystem.root !== undefined);
+      hasPersistentFilesystem.done();
+    });
+    var fail = hasPersistentFilesystem.step_func(function(module) {
+      assert_true(false, 'hasPersistentFilesystem should not fail');
+      hasPersistentFilesystem.done();
+    });
+    var id =  window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, win, fail);
+  });
 </script>
 
