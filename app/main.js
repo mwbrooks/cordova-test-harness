@@ -1,5 +1,4 @@
 var deviceInfo = function() {
-    alert('deviceready');
     document.getElementById("platform").innerHTML = device.platform;
     document.getElementById("version").innerHTML = device.version;
     document.getElementById("uuid").innerHTML = device.uuid;
@@ -9,9 +8,7 @@ var deviceInfo = function() {
     document.getElementById("colorDepth").innerHTML = screen.colorDepth;
 };
 
-alert('load');
 function init() {
-    alert('init');
     // the next line makes it impossible to see Contacts on the HTC Evo since it
     // doesn't have a scroll button
     // document.addEventListener("touchmove", preventBehavior, false);
