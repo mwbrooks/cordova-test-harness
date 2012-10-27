@@ -1,0 +1,127 @@
+<!doctype html>
+<title>Simple Test</title>
+<script src="C:\resources\testharness.js"></script>
+<script src="C:\resources\testharnessreport.js"></script>
+<div id="log"></div>
+
+<!--
+  See James' slides for more details: http://hoppipolla.co.uk/talks/ttwf/testharness.html
+  -->
+  
+<!--
+  IMPORTANT: Create a symbolic link from your hard drive root directory to the 
+             Dropbox /HTML5/ so that the testharness.js reference above works 
+             without changes.
+             For example:
+             ln -s ~/Dropbox/TestTWF/MOBILE/resources /resources
+  -->
+  
+<script>
+/*
+describe('Accelerometer (navigator.accelerometer)', function () {
+    it("should exist", function () {
+        expect(navigator.accelerometer).toBeDefined();
+    });*/
+	// TestHarness.JS
+	test(function () {
+		assert_not_equals(navigator.accelerometer, 'undefined');
+	}, "Accelerometer defined");
+	
+/*
+describe("getCurrentAcceleration", function() {
+        it("should exist", function() {
+            expect(typeof navigator.accelerometer.getCurrentAcceleration).toBeDefined();
+            expect(typeof navigator.accelerometer.getCurrentAcceleration == 'function').toBe(true);
+        });*/
+		// TestHarness.JS
+		test(function () {
+			assert_not_equals(typeof navigator.accelerometer.getCurrentAcceleration, 'undefined');
+			assert_true(typeof navigator.accelerometer.getCurrentAcceleration == 'function');
+		}, "should exist");
+
+        /*it("success callback should be called with an Acceleration object", function() {
+            var win = jasmine.createSpy().andCallFake(function(a) {
+                    expect(a).toBeDefined();
+                    expect(a.x).toBeDefined();
+                    expect(typeof a.x == 'number').toBe(true);
+                    expect(a.y).toBeDefined();
+                    expect(typeof a.y == 'number').toBe(true);
+                    expect(a.z).toBeDefined();
+                    expect(typeof a.z == 'number').toBe(true);
+                    expect(a.timestamp).toBeDefined();
+                    expect(typeof a.timestamp).toBe('number');
+                }),
+                fail = jasmine.createSpy();
+
+            runs(function () {
+                navigator.accelerometer.getCurrentAcceleration(win, fail);
+            });
+	
+            waitsFor(function () { return win.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+	
+            runs(function () {
+                expect(fail).not.toHaveBeenCalled();
+            });
+        });
+		// TestHarness.JS
+		test(function () {
+			assert_not_equals(a, 'undefined');
+			assert_not_equals(a.x, 'undefined');
+			assert_true(typeof a.x == 'number');
+			assert_not_equals(a.y, 'undefined');
+			assert_true(typeof a.y == 'number');
+			assert_not_equals(a.z, 'undefined');
+			assert_true(typeof a.z == 'number');
+			assert_not_equals(a.timestamp, 'undefined');
+			assert_equals(typeof a.timestamp, 'number');
+			
+		}, "success callback should be called with an Acceleration object");
+		
+		
+        it("success callback Acceleration object should have (reasonable) values for x, y and z expressed in m/s^2", function() {
+            var reasonableThreshold = 15;
+            var win = jasmine.createSpy().andCallFake(function(a) {
+                    expect(a.x).toBeLessThan(reasonableThreshold);
+                    expect(a.x).toBeGreaterThan(reasonableThreshold * -1);
+                    expect(a.y).toBeLessThan(reasonableThreshold);
+                    expect(a.y).toBeGreaterThan(reasonableThreshold * -1);
+                    expect(a.z).toBeLessThan(reasonableThreshold);
+                    expect(a.z).toBeGreaterThan(reasonableThreshold * -1);
+                }),
+                fail = jasmine.createSpy();
+
+            runs(function () {
+                navigator.accelerometer.getCurrentAcceleration(win, fail);
+            });
+
+            waitsFor(function () { return win.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(fail).not.toHaveBeenCalled();
+            });
+        });
+
+        it("success callback Acceleration object should return a recent timestamp", function() {
+            var veryRecently = (new Date()).getTime();
+            // Need to check that dates returned are not vastly greater than a recent time stamp.
+            // In case the timestamps returned are ridiculously high
+            var reasonableTimeLimit = veryRecently + 5000; // 5 seconds from now
+            var win = jasmine.createSpy().andCallFake(function(a) {
+                    expect(a.timestamp).toBeGreaterThan(veryRecently);
+                    expect(a.timestamp).toBeLessThan(reasonableTimeLimit);
+                }),
+                fail = jasmine.createSpy();
+
+            runs(function () {
+                navigator.accelerometer.getCurrentAcceleration(win, fail);
+            });
+
+            waitsFor(function () { return win.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(fail).not.toHaveBeenCalled();
+            });
+        });
+    });*/
+	
+</script>

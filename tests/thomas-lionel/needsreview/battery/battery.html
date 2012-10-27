@@ -1,0 +1,16 @@
+<!doctype html>
+<title>Battery test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
+<div id="log"></div>
+<script>
+
+document.addEventListener("deviceready",
+  function() {
+    test(function() {
+      assert_true(typeof navigator.battery !== "undefined");
+    }, "Battery (navigator.battery) should exist"),
+  false);
+
+</script>

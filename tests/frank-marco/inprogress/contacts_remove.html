@@ -1,0 +1,17 @@
+<!doctype html>
+<title>PhoneGap Capture test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+
+test(function() {
+  assert_true(typeof navigator.contacts !== "undefined");
+}, "Contacts (navigator.contacts) should exist");
+
+test(function() {
+  assert_true(typeof navigator.contacts.remove !== "undefined");
+  assert_true(typeof navigator.contacts.remove === "function");
+}, "Contacts (navigator.contacts.remove) should a function");
+
+</script>

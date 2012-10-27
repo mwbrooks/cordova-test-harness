@@ -1,0 +1,92 @@
+<!doctype html>
+<title>PhoneGap Capture test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+
+test(function() {
+  assert_true(typeof navigator.device !== "undefined");
+  assert_true(typeof navigator.device.capture !== "undefined");
+}, "Capture (navigator.device.capture) should exist");
+
+test(function() {
+  assert_true(typeof navigator.device.capture.supportedAudioModes !== "undefined");
+  assert_true(typeof navigator.device.capture.supportedImageModes !== "undefined");
+  assert_true(typeof navigator.device.capture.supportedVideoModes !== "undefined");
+}, "Capture (navigator.device.capture) should have the correct properties");
+
+test(function() {
+  /* Both are useful? The second line should be enough */
+  assert_true(typeof navigator.device.capture.captureAudio !== "undefined");
+  /* or assert_equals(typeof navigator.device.capture.captureAudio, "function"); ? */
+  assert_true(typeof navigator.device.capture.captureAudio === "function");
+}, "Capture (navigator.device.capture) should contain a captureAudio function");
+
+test(function() {
+  assert_true(typeof navigator.device.capture.captureImage !== "undefined");
+  assert_true(typeof navigator.device.capture.captureImage === "function");
+}, "Capture (navigator.device.capture) should contain a captureImage function");
+
+test(function() {
+  assert_true(typeof navigator.device.capture.captureVideo !== "undefined");
+  assert_true(typeof navigator.device.capture.captureVideo === "function");
+}, "Capture (navigator.device.capture) should contain a captureVideo function");
+
+test(function() {
+  var options = new CaptureAudioOptions();
+  assert_true(typeof options !== "undefined");
+  assert_true(typeof options.limit !== "undefined");
+  assert_true(typeof options.duration !== "undefined");
+  assert_true(typeof options.mode !== "undefined");
+}, "CaptureAudioOptions constructor should exist");
+
+test(function() {
+  var options = new CaptureImageOptions();
+  assert_true(typeof options !== "unedfined");
+  assert_true(typeof options.limit !== "unedfined");
+  assert_true(typeof options.mode !== "unedfined");
+}, "CaptureImageOptions constructor should exist");
+
+test(function() {
+  var options = new CaptureVideoOptions();
+  assert_true(typeof options !== "undefined");
+  assert_true(typeof options.limit !== "undefined");
+  assert_true(typeof options.duration !== "undefined");
+  assert_true(typeof options.mode !== "undefined");
+}, "CaptureVideoOptions constructor should exist");
+
+test(function() {
+  assert_equals(CaptureError.CAPTURE_INTERNAL_ERR, 0);
+  assert_equals(CaptureError.CAPTURE_APPLICATION_BUSY, 1);
+  assert_equals(CaptureError.CAPTURE_INVALID_ARGUMENT, 2);
+  assert_equals(CaptureError.CAPTURE_NO_MEDIA_FILES, 3);
+}, "CaptureError constants should be defined");
+
+test(function() {
+  var error = new CaptureError();
+  assert_true(typeof error !== "undefined");
+  assert_true(typeof error.code !== "undefined");
+}, "CaptureError properties should exist");
+
+test(function() {
+  var fileData = new MediaFileData();
+  assert_true(typeof fileData !== "undefined");
+  assert_true(typeof fileData.bitrate !== "undefined");
+  assert_true(typeof fileData.codecs !== "undefined");
+  assert_true(typeof fileData.duration !== "undefined");
+  assert_true(typeof fileData.height !== "undefined");
+  assert_true(typeof fileData.width !== "undefined");
+}, "MediaFileData constructor should exist");
+
+test(function() {
+  var fileData = new MediaFile();
+  assert_true(typeof fileData !== "undefined");
+  assert_true(typeof fileData.name !== "undefined");
+  assert_true(typeof fileData.fullPath !== "undefined");
+  assert_true(typeof fileData.type !== "undefined");
+  assert_true(typeof fileData.lastModifiedDate !== "undefined");
+  assert_true(typeof fileData.size !== "undefined");
+}, "MediaFile constructor should exist");
+
+</script>

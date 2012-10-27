@@ -1,0 +1,1 @@
+https://github.com/vhardy/test-twf-paris-2012-device-orientation-tests.git

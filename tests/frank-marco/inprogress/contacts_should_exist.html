@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<head>
+    <!--
+  See James' slides for more details: http://hoppipolla.co.uk/talks/ttwf/testharness.html
+  -->
+
+    <!--
+    IMPORTANT: Create a symbolic link from your hard drive root directory to the
+               Dropbox /HTML5/ so that the testharness.js reference above works
+               without changes.
+               For example:
+               ln -s ~/Dropbox/TestTWF/MOBILE/resources /resources
+    -->
+
+    <title>Simple Test</title>
+    <script src="/resources/testharness.js"></script>
+    <script src="/resources/testharnessreport.js"></script>
+    <script>
+
+        /* Contacts (navigator.contacts) match WebIDL */
+
+        test(function () {
+            assert_idl_attribute(navigator, 'contacts', '');
+        }, "Contacts (navigator.contacts) match WebIDL");
+
+        /* Contacts (navigator.contacts) should exist */
+
+        test(function () {
+            assert_true(typeof navigator.contacts !== 'undefined');
+            assert_true(typeof navigator.contacts === 'object');
+
+            /* should contain a find function */
+
+            test(function () {
+                assert_true(typeof navigator.contacts.find !== 'undefined');
+                assert_true(typeof navigator.contacts.find === 'function');
+                assert_own_property(navigator.contacts, 'find', '');
+            }, "should contain a find function");
+
+            /* has Object ContactFindOptions */
+
+            test(function () {
+                assert_true(ContactFindOptions !== 'undefined');
+                assert_true(typeof ContactFindOptions === 'function');
+                assert_own_property(window, 'ContactFindOptions', '');
+            }, "has Object ContactFindOptions");
+
+            /*contacts should find something and call success callback*/
+
+            var findTest = async_test("contacts should find something and call success callback");
+            var fail = findTest.step_func(function () {
+                assert_unreached("find failed");
+            });
+            var win = findTest.step_func(function (result) {
+                test(function () {
+                    assert_true(result !== 'undefined');
+                    assert_true(Array.isArray(result));
+                }, "success callback should be called with an array");
+                findTest.done();
+            });
+
+            findTest.step(function () {
+                obj = new ContactFindOptions();
+                obj.filter = "";
+                obj.multiple = true;
+                navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], win, fail, obj);
+            });
+
+            /*should throw an exception if success callback is empty*/
+
+            test(function () {
+                assert_throws("NOT_FOUND_ERR", function () {
+                    var fail = function () {
+                    };
+                    var obj = new ContactFindOptions();
+                    obj.filter = "";
+                    obj.multiple = true;
+                    navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], null, fail, obj);
+                });
+            }, "should throw an exception if success callback is empty");
+
+            /* error callback should be called when no fields are specified */
+
+            var findTest2 = async_test("error callback should be called when no fields are specified");
+            var fail = findTest2.step_func(function () {
+                findTest2.done();
+            });
+            var win = findTest2.step_func(function (result) {
+                assert_unreached("success callback was called");
+            });
+
+            findTest2.step(function () {
+                obj = new ContactFindOptions();
+                obj.filter = "";
+                obj.multiple = true;
+                navigator.contacts.find([], win, fail, obj);
+            });
+
+            /* with newly-created contact */
+
+
+
+        }, "Contacts (navigator.contacts) should exist");
+
+    </script>
+</head>
+<body>
+<div id="log"></div>
+</body>
+
+

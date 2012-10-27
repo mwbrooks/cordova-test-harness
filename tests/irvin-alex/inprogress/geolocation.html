@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geolocation API Specs</title>
+  <meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes, initial-scale=1.0;" />
+
+  <!-- Test Runner -->
+  <script src="../resources/testharness.js"></script>
+  <script src="../resources/testharnessreport.js"></script>
+</head>
+<body>
+  <div id="log"></div>
+  
+    <script type="text/javascript">
+      setup({
+        timeout: 30000
+      });
+
+      test(function() {
+        assert_true(typeof navigator.geolocation.getCurrentPosition !== 'undefined');
+        assert_true((typeof navigator.geolocation.getCurrentPosition === 'function') === true);
+      }, "Geolocation(navigator.geolocation) should contain a getCurrentPosition method", {
+        author: "Alejandro Mantecón Guillén <alemangui@gmail.com>"
+      });
+
+
+      test(function() {
+        assert_true(typeof navigator.geolocation.clearWatch !== 'undefined');
+        assert_true((typeof navigator.geolocation.clearWatch === 'function') === true);
+      }, "Geolocation(navigator.geolocation) should contain a clearWatch function", {
+        author: "Alejandro Mantecón Guillén <alemangui@gmail.com>"
+      });
+
+      test(function() {
+        assert_true(navigator.geolocation !== undefined);
+      }, 'Geolocation (navigator.geolocation) should exist', {
+        author: 'Irvin Herrera Garza <irvin.herrerag@gmail.com>'
+      });
+
+
+      test(function() {
+        assert_true(navigator.geolocation.watchPosition !== undefined);
+        assert_true(typeof navigator.geolocation.watchPosition == 'function');
+      }, 'Geolocation (navigator.geolocation) should contain a watchPosition function', {
+        author: 'Irvin Herrera Garza <irvin.herrerag@gmail.com>'
+      });
+
+      // async_test_2 detects a bug in firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=650247
+      var async_test_1 = async_test("Geolocation (navigator.geolocation) getCurrentPosition method error callback should be called if we set timeout to 0 and maximumAge to a very small number", {
+        author: "Irvin Herrera Garza <irvin.herrerag@gmail.com>",
+        timeout: 20000
+      });
+
+      async_test_1.step(function() {
+        navigator.geolocation.getCurrentPosition(async_test_1.step_func(function(position) {
+          assert_unreached('Geolocation success callback was called');
+          async_test_1.done();
+        }), async_test_1.step_func(function(error) {
+          async_test_1.done();
+        }), {
+          timeout: 0,
+          maximumAge: 0
+        });
+      });
+
+      var async_test_2 = async_test("Geolocation (navigator.geolocation) getCurrentPosition method success callback should be called with a Position object", {
+        author: "Alejandro Mantecón Guillén <alemangui@gmail.com>",
+        timeout: 20000
+      });
+
+      async_test_2.step(function() {
+        navigator.geolocation.getCurrentPosition(async_test_2.step_func(function(position) {
+          assert_true(typeof position.coords !== 'undefined');
+          assert_true(typeof position.timestamp !== 'undefined');
+          async_test_2.done();
+        }), async_test_2.step_func(function(error) {
+          assert_unreached('Error callback called');
+          async_test_2.done();
+        }), {
+          maximumAge: 300000,
+          timeout: 20000
+        });
+      });
+
+      var async_test_3 = async_test("Geolocation (navigator.geolocation) watchPosition method should be called if we set timeout to 0 and maximumAge to a very small number", {
+        author: "Irvin Herrera Garza <irvin.herrerag@gmail.com>",
+        timeout: 20000
+      });
+
+      async_test_3.step(function() {
+        navigator.geolocation.watchPosition(async_test_3.step_func(function(position) {
+          assert_unreached('Geolocation success callback was called');
+          navigator.geolocation.clearWatch(true);
+          async_test_3.done();
+        }), async_test_3.step_func(function(error) {
+          async_test_3.done();
+        }), {
+          timeout: 0,
+          maximumAge: 0
+        });
+      });
+
+      var async_test_4 = async_test("Geolocation (navigator.geolocation) watchPosition method success callback should be called with a Position object", {
+          author: "Alejandro Mantecón Guillén <alemangui@gmail.com>",
+          timeout: 20000
+      });
+
+      async_test_4.step(function() {
+          navigator.geolocation.watchPosition(async_test_4.step_func(function(position) {
+              assert_true(typeof position.coords !== 'undefined');
+              assert_true(typeof position.timestamp !== 'undefined');
+              navigator.geolocation.clearWatch(true);
+              async_test_4.done();
+          }), async_test_4.step_func(function(error){
+                  assert_unreached('Error callback called');
+                  async_test_4.done();
+              }), 
+          {
+              maximumAge: 300000 // 5 minutes maximum age of cached position
+          });
+      });
+
+
+    </script>
+</body>
+</html>

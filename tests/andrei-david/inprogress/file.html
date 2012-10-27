@@ -1,0 +1,103 @@
+<!doctype html>
+<title>Simple Test</title>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<script src="resources/sinon-1.5.0.js"></script>
+<script src="tests.js"></script>
+<div id="log"></div>
+<script>
+
+  var fileErrorMap = {
+        1: 'NOT_FOUND_ERR',
+        2: 'SECURITY_ERR',
+        3: 'ABORT_ERR',
+        4: 'NOT_READABLE_ERR',
+        5: 'ENCODING_ERR',
+        6: 'NO_MODIFICATION_ALLOWED_ERR',
+        7: 'INVALID_STATE_ERR',
+        8: 'SYNTAX_ERR',
+        9: 'INVALID_MODIFICATION_ERR',
+        10:'QUOTA_EXCEEDED_ERR',
+        11:'TYPE_MISMATCH_ERR',
+        12:'PATH_EXISTS_ERR'
+  };
+
+  // HELPER FUNCTIONS
+
+  // deletes specified file or directory
+  var deleteEntry = function(name, success, error) {
+      // deletes entry, if it exists
+      window.resolveLocalFileSystemURI(root.toURL() + '/' + name,
+          function(entry) {
+              if (entry.isDirectory === true) {
+                  entry.removeRecursively(success, error);
+              } else {
+                  entry.remove(success, error);
+              }
+          }, success);
+  };
+  // deletes file, if it exists, then invokes callback
+  var deleteFile = function(fileName, callback) {
+      root.getFile(fileName, null,
+              // remove file system entry
+              function(entry) {
+                  entry.remove(callback, function() { console.log('[ERROR] deleteFile cleanup method invoked fail callback.'); });
+              },
+              // doesn't exist
+              callback);
+  };
+  // deletes and re-creates the specified file
+  var createFile = function(fileName, success, error) {
+      deleteEntry(fileName, function() {
+          root.getFile(fileName, {create: true}, success, error);
+      }, error);
+  };
+  // deletes and re-creates the specified directory
+  var createDirectory = function(dirName, success, error) {
+      deleteEntry(dirName, function() {
+         root.getDirectory(dirName, {create: true}, success, error);
+      }, error);
+  };
+
+  var createFail = function(module) {
+      return jasmine.createSpy().andCallFake(function(err) {
+          console.log('[ERROR ' + module + '] ' + JSON.stringify(err));
+      });
+  };
+
+  var createWin = function(module) {
+      return jasmine.createSpy().andCallFake(function() {
+          console.log('[ERROR ' + module + '] Unexpected success callback');
+      });
+  };
+
+  test(function() {
+      assert_equals(FileError.NOT_FOUND_ERR,1);
+      assert_equals(FileError.SECURITY_ERR,2);
+      assert_equals(FileError.ABORT_ERR,3);
+      assert_equals(FileError.NOT_READABLE_ERR,4);
+      assert_equals(FileError.ENCODING_ERR,5);
+      assert_equals(FileError.NO_MODIFICATION_ALLOWED_ERR,6);
+      assert_equals(FileError.INVALID_STATE_ERR,7);
+      assert_equals(FileError.SYNTAX_ERR,8);
+      assert_equals(FileError.INVALID_MODIFICATION_ERR,9);
+      assert_equals(FileError.QUOTA_EXCEEDED_ERR,10);
+      assert_equals(FileError.TYPE_MISMATCH_ERR,11);
+      assert_equals(FileError.PATH_EXISTS_ERR,12);
+  }, 'File API FileError object should define FileError constants');
+
+  test(function(){
+      assert_equals(LocalFileSystem.TEMPORARY,0);
+      assert_equals(LocalFileSystem.PERSISTENT,1);
+  }, 'File API LocalFileSystem should define LocalFileSystem constants');
+
+  test(function(){
+      assert_true(window.requestFileSystem !== undefined && window.requestFileSystem !== null);
+  }, 'File API LocalFileSystem window.requestFileSystem should be defined');
+
+  test(function(){
+
+  }, 'File API LocalFileSystem window.requestFileSystem should be able to retrieve a PERSISTENT file system');
+
+</script>
+

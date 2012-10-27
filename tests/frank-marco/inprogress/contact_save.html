@@ -1,0 +1,181 @@
+<!doctype html>
+<title>PhoneGap Capture test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+
+test(function() {
+  assert_true(typeof navigator.contacts !== "undefined");
+}, "Contacts (navigator.contacts) should exist");
+
+test(function() {
+  var contact = new Contact("a", "b", new ContactName("a", "b", "c", "d", "e", "f"), "c", [], [], [], [], [], "f", "i", [], [], []);  
+  assert_true(typeof contact !== "undefined");  
+  
+  test(function() {
+  	assert_true(typeof contact.save !== "undefined");
+  	assert_true(typeof contact.save === "function");
+  }, "Contact.save should be a function");
+  
+  test(function() {
+  	assert_true(contact.id === "a");
+  }, "Contact.id should be 'a'");
+  
+  test(function() {
+  	assert_true(contact.displayName === "b");
+  }, "Contact.displayName should be 'b'");
+
+  test(function() {
+  	assert_true(contact.name.formatted === "a");
+  }, "Contact.name.formatted should be 'a'");
+  
+  test(function() {
+  	assert_true(contact.nickname === "c");
+  }, "Contact.nickname should be 'c'");
+
+  test(function() {
+  	assert_true(typeof contact.phoneNumbers !== "undefined");
+  }, "Contact.phoneNumbers should be exist");
+  
+  test(function() {
+  	assert_true(typeof contact.emails !== "undefined");
+  }, "Contact.emails should be exist");
+  
+  test(function() {
+  	assert_true(typeof contact.addresses !== "undefined");
+  }, "Contact.addresses should be exist");
+  
+  test(function() {
+  	assert_true(typeof contact.ims !== "undefined");
+  }, "Contact.ims should be exist");
+
+  test(function() {
+  	assert_true(typeof contact.organizations !== "undefined");
+  }, "Contact.organizations should be exist");
+
+  test(function() {
+  	assert_true(contact.birthday === "f");
+  }, "Contact.birthday should be 'f'");
+
+  test(function() {
+  	assert_true(contact.note === "i");
+  }, "Contact.birthday should be 'i'");
+  
+  test(function() {
+  	assert_true(typeof contact.photos !== "undefined");
+  }, "Contact.photos should be exist");
+
+  test(function() {
+  	assert_true(typeof contact.categories !== "undefined");
+  }, "Contact.categories should be exist");
+
+  test(function() {
+  	assert_true(typeof contact.urls !== "undefined");
+  }, "Contact.urls should be exist");
+  
+}, "should be able to create a Contact instance");
+/*
+
+    describe("Contact object", function () {
+        it("should be able to create instance", function() {
+            var contact = new Contact("a", "b", new ContactName("a", "b", "c", "d", "e", "f"), "c", [], [], [], [], [], "f", "i",
+                [], [], []);
+        });
+
+        it("should be able to define a ContactName object", function() {
+            var contactName = new ContactName("Dr. First Last Jr.", "Last", "First", "Middle", "Dr.", "Jr.");
+            expect(contactName).toBeDefined();
+            expect(contactName.formatted).toBe("Dr. First Last Jr.");
+            expect(contactName.familyName).toBe("Last");
+            expect(contactName.givenName).toBe("First");
+            expect(contactName.middleName).toBe("Middle");
+            expect(contactName.honorificPrefix).toBe("Dr.");
+            expect(contactName.honorificSuffix).toBe("Jr.");
+        });
+
+        it("should be able to define a ContactField object", function() {
+            var contactField = new ContactField("home", "8005551212", true);
+            expect(contactField).toBeDefined();
+            expect(contactField.type).toBe("home");
+            expect(contactField.value).toBe("8005551212");
+            expect(contactField.pref).toBe(true);
+        });
+
+        it("ContactField object should coerce type and value properties to strings", function() {
+            var contactField = new ContactField(12345678, 12345678, true);
+            expect(contactField.type).toBe("12345678");
+            expect(contactField.value).toBe("12345678");
+        });
+
+        it("should be able to define a ContactAddress object", function() {
+            var contactAddress = new ContactAddress(true, "home", "a","b","c","d","e","f");
+            expect(contactAddress).toBeDefined();
+            expect(contactAddress.pref).toBe(true);
+            expect(contactAddress.type).toBe("home");
+            expect(contactAddress.formatted).toBe("a");
+            expect(contactAddress.streetAddress).toBe("b");
+            expect(contactAddress.locality).toBe("c");
+            expect(contactAddress.region).toBe("d");
+            expect(contactAddress.postalCode).toBe("e");
+            expect(contactAddress.country).toBe("f");
+        });
+
+        it("should be able to define a ContactOrganization object", function() {
+            var contactOrg = new ContactOrganization(true, "home", "a","b","c","d","e","f","g");
+            expect(contactOrg).toBeDefined();
+            expect(contactOrg.pref).toBe(true);
+            expect(contactOrg.type).toBe("home");
+            expect(contactOrg.name).toBe("a");
+            expect(contactOrg.department).toBe("b");
+            expect(contactOrg.title).toBe("c");
+        });
+
+        it("should be able to define a ContactFindOptions object", function() {
+            var contactFindOptions = new ContactFindOptions("a", true, "b");
+            expect(contactFindOptions).toBeDefined();
+            expect(contactFindOptions.filter).toBe("a");
+            expect(contactFindOptions.multiple).toBe(true);
+        });
+
+        it("should contain a clone function", function() {
+            var contact = new Contact();
+            expect(contact.clone).toBeDefined();
+            expect(typeof contact.clone).toBe('function');
+        });
+
+        it("clone function should make deep copy of Contact Object", function() {
+            var contact = new Contact();
+            contact.id=1;
+            contact.displayName="Test Name";
+            contact.nickname="Testy";
+            contact.gender="male";
+            contact.note="note to be cloned";
+            contact.name = new ContactName("Mr. Test Name");
+
+            var clonedContact = contact.clone();
+
+            expect(contact.id).toBe(1);
+            expect(clonedContact.id).toBe(null);
+            expect(clonedContact.displayName).toBe(contact.displayName);
+            expect(clonedContact.nickname).toBe(contact.nickname);
+            expect(clonedContact.gender).toBe(contact.gender);
+            expect(clonedContact.note).toBe(contact.note);
+            expect(clonedContact.name.formatted).toBe(contact.name.formatted);
+            expect(clonedContact.connected).toBe(contact.connected);
+        });
+
+        it("should contain a save function", function() {
+            var contact = new Contact();
+            expect(contact.save).toBeDefined();
+            expect(typeof contact.save).toBe('function');
+        });
+
+        it("should contain a remove function", function() {
+            var contact = new Contact();
+            expect(contact.remove).toBeDefined();
+            expect(typeof contact.remove).toBe('function');
+        });
+    });
+*/
+</script>

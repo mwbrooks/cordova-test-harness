@@ -1,0 +1,12 @@
+<!doctype html>
+<title>Battery test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+
+test(function() {
+  assert_true(typeof navigator.battery !== "undefined");
+}, "Battery (navigator.battery) should exist");
+
+</script>

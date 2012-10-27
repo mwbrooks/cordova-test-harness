@@ -1,0 +1,30 @@
+<!doctype html>
+<title>Network test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+
+test(function() {
+  assert_true(typeof navigator.network !== "undefined");
+}, "Network (navigator.network) should exist");
+
+test(function() {
+  assert_true(typeof navigator.network.connection !== "undefined");
+}, "Connection (navigator.network.connection) should exist");
+
+test(function() {
+  assert_true(typeof navigator.network.connection.type !== "undefined");
+}, "Connection (navigator.network.connection) should contain connection properties");
+
+test(function() {
+  assert_equals(Connection.UNKNOWN, "unknown");
+  assert_equals(Connection.ETHERNET, "ethernet");
+  assert_equals(Connection.WIFI, "wifi");
+  assert_equals(Connection.CELL_2G, "2g");
+  assert_equals(Connection.CELL_3G, "3g");
+  assert_equals(Connection.CELL_4G, "4g");
+  assert_equals(Connection.NONE, "none");
+}, "Network information API should define constants for connection status");
+
+</script>

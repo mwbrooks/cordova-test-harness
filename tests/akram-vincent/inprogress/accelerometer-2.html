@@ -1,0 +1,105 @@
+<!doctype html>
+<title>Simple Test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+
+<script>
+
+function runAll () {
+    /**
+     * Utility: invokes done() on the async test and resets the id
+     */
+    function onDone (async_test, id) {
+        async_test.done();
+        navigator.accelerometer.clearWatch(id);
+    }
+
+    test(function() {
+        assert_true(navigator.accelerometer.watchAcceleration !== undefined);
+        assert_true(typeof navigator.accelerometer.watchAcceleration == 'function');
+    }, "watchAcceleration should exist");
+  
+
+    var hasValidParamTest = async_test("watchAcceleration - success callback should be called with an Acceleration object");
+
+    hasValidParamTest.step(function () {
+        var id;
+    
+        var success = hasValidParamTest.step_func(function (a) {
+            assert_true(a !== undefined, 'success callback should have a parameter');
+            assert_true(a.x !== undefined, 'accelerometer data should have an x parameter');
+            assert_true(typeof a.x === 'number', 'accelerometer x parameter should be a number');
+            assert_true(a.y !== undefined, 'accelerometer data should have an y parameter');
+            assert_true(typeof a.y === 'number', 'accelerometer y parameter should be a number');
+            assert_true(a.z !== undefined, 'accelerometer data should have an z parameter');
+            assert_true(typeof a.z === 'number', 'accelerometer z parameter should be a number');
+            assert_true(a.timestamp !== undefined, 'accelerometer data should have a timestamp parameter');
+            assert_true(typeof a.timestamp === 'number', 'accelerometer timestamp parameter should be a number');
+        
+            onDone(hasValidParamTest, id);
+        });
+    
+        var failure = hasValidParamTest.step_func(function (a) {
+            assert_true(false, 'watchAcceleration should not fail');
+            onDone(hasValidParamTest, id);
+        });
+    
+        id = navigator.accelerometer.watchAcceleration(success, failure, {frequency: 500});
+    });
+
+    var hasReasonableParam = async_test("watchAcceleration - success callback Acceleration object should have \
+                                (reasonable) values for x, y and z expressed in m/s^2");
+
+    hasReasonableParam.step(function () {
+        var reasonableThreshold = 15,
+            id;
+    
+        var success = wat.step_func(function (a) {
+            assert_true(a.x < reasonableThreshold);
+            assert_true(a.x > reasonableThreshold * -1);
+            assert_true(a.y < reasonableThreshold);
+            assert_true(a.y > reasonableThreshold * -1);
+            assert_true(a.z < reasonableThreshold);
+            assert_true(a.z > reasonableThreshold * -1);
+            onDone(hasReasonableParam, id);
+        });
+    
+        var failure = hasReasonableParam.step_func(function (a) {
+            assert_true(true == false, 'watchAcceleration should not fail');
+            onDone(hasReasonableParam, id);
+        });
+    
+        id = navigator.accelerometer.watchAcceleration(success, failure, {frequency: 500});
+    });
+
+
+    var hasRecentTimestamp = async_test("watchAcceleration - success callback Acceleration object should \
+                                return a recent timestamp");
+
+    hasRecentTimestamp.step(function () {
+        var veryRecently = (new Date()).getTime(),
+            id;
+        // Need to check that dates returned are not vastly greater than a recent time stamp.
+        // In case the timestamps returned are ridiculously high
+        var reasonableTimeLimit = veryRecently + 5000; // 5 seconds from now
+    
+        var success = hasRecentTimestamp.step_func(function (a) {
+            assert_true(a.timestamp > veryRecently);
+            assert_true(a.timestamp < reasonableTimeLimit);
+        
+            onDone(hasRecentTimestamp, id);
+        });
+    
+        var failure = hasRecentTimestamp.step_func(function (a) {
+            assert_true(true == false, 'watchAcceleration should not fail');
+            onDone(hasRecentTimestamp, id);
+        });
+    
+        id = navigator.accelerometer.watchAcceleration(success, failure, {frequency: 500});
+    });
+}
+
+document.ondeviceready = runAll;
+
+</script>

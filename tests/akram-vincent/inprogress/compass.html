@@ -1,0 +1,132 @@
+<!doctype html>
+<title>Simple Test</title>
+
+
+<script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
+
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+
+
+
+<div id="log"></div>
+
+<!--
+  See James' slides for more details: http://hoppipolla.co.uk/talks/ttwf/testharness.html
+  -->
+  
+<!--
+  IMPORTANT: Create a symbolic link from your hard drive root directory to the 
+             Dropbox /HTML5/ so that the testharness.js reference above works 
+             without changes.
+             For example:
+             ln -s ~/Dropbox/TestTWF/MOBILE/resources /resources
+  -->
+  
+<script>
+	
+	
+	
+	// Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        navigator.compass.getCurrentHeading(onSuccess, onError);
+    }
+
+    // onSuccess: Get the current heading
+    //
+    function onSuccess(heading) {
+        alert('Heading: ' + heading.magneticHeading);
+    }
+
+    // onError: Failed to get the heading
+    //
+    function onError(compassError) {
+        alert('Compass Error: ' + compassError.code);
+    }
+    
+
+var stTest = async_test("Compass (navigator.compass) should exist");
+	setTimeout(function () {
+		    stTest.step(function () {
+				assert_false(navigator.compass == 'undefined');
+			});
+		stTest.done();
+	});
+	
+	var stTest1 = async_test("Compass (navigator.compass) should contain a getCurrentHeading function");
+        setTimeout(function () {
+		    stTest1.step(function () {
+		        assert_not_equals(navigator.compass.getCurrentHeading, 'undefined');
+				assert_equals(typeof navigator.compass.getCurrentHeading, 'function');
+		    });
+		    stTest1.done();
+		});
+	
+	var stTest2 = async_test("Compass (navigator.compass) should contain a watchHeading function");
+	setTimeout(function () {
+		    stTest2.step(function () {
+				assert_not_equals(navigator.compass.watchHeading, 'undefined');
+				assert_true(typeof navigator.compass.watchHeading == 'function');
+			});
+		stTest2.done();
+	});
+	
+	var stTest3 = async_test("Compass (navigator.compass) should contain a clearWatch function");
+	setTimeout(function () {
+		    stTest3.step(function () {
+				assert_not_equals(navigator.compass.clearWatch, 'undefined');
+				assert_true(typeof navigator.compass.clearWatch == 'function');
+			});
+		stTest3.done();
+	});
+	
+	var stTest4 = async_test("Compass Constants (window.CompassError) should exist");
+	setTimeout(function () {
+		    stTest4.step(function () {
+				assert_not_equals(window.CompassError, 'undefined');
+				assert_equals(window.CompassError.COMPASS_INTERNAL_ERR,0);
+				assert_equals(window.CompassError.COMPASS_NOT_SUPPORTED,20);
+			});
+		stTest4.done();
+	});
+	
+	var stTest5 = async_test("Compass Heading model (CompassHeading) should exist");
+	setTimeout(function () {
+			stTest5.step(function () {
+				assert_not_equals(CompassHeading, 'undefined');
+		});
+	stTest5.done();
+	});
+
+	var stTest6 = async_test("Compass Heading model (CompassHeading) should be able to create a new CompassHeading instance with no parameters");
+	setTimeout(function () {
+		stTest6.step(function () {
+			var h = new CompassHeading();
+			assert_not_equals(h.magneticHeading, 'undefined');
+			assert_not_equals(h.trueHeading, 'undefined');
+			assert_not_equals(h.headingAccuracy, 'undefined');
+			assert_true(typeof h.timestamp == 'number');
+		});
+	stTest6.done();
+	});
+
+	var stTest7 = async_test("Compass Heading model (CompassHeading) should be able to creat a new CompassHeading instance with parameters");
+		setTimeout(function () {
+			stTest7.step(function () {
+			var h = new CompassHeading(1,2,3,4);
+			assert_equals(h.magneticHeading, 1);
+			assert_equals(h.trueHeading, 2);
+			assert_equals(h.headingAccuracy, 3);
+			assert_equals(h.timestamp.valueOf(), 4);
+			assert_true(typeof h.timestamp == 'number');
+		});
+	stTest7.done();
+	});    
+    
+
+</script>

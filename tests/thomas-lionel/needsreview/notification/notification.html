@@ -1,0 +1,24 @@
+<!doctype html>
+<title>Notification test</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+
+test(function() {
+  assert_true(typeof navigator.notification !== "undefined");
+}, "Notification (navigator.notification) should exist");
+
+test(function() {
+  assert_true(typeof navigator.notification.vibrate === "function");
+}, "Notification (navigator.notification) should contain a vibrate function");
+
+test(function() {
+  assert_true(typeof navigator.notification.beep === "function");
+}, "Notification (navigator.notification) should contain a beep function");
+
+test(function() {
+  assert_true(typeof navigator.notification.alert === "function");
+}, "Notification (navigator.notification) should contain a alert function");
+
+</script>
