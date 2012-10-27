@@ -22,10 +22,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="contacts_should_exist.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/inprogress/contacts_should_exist.html">
+      <file leaf-file-name="contacts.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/needsreview/contacts/contacts.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="65" column="59" selection-start="2770" selection-end="2770" vertical-scroll-proportion="0.54468805">
+            <state line="525" column="13" selection-start="18282" selection-end="18282" vertical-scroll-proportion="11.193929">
               <folding />
             </state>
           </provider>
@@ -48,6 +48,7 @@
         <option value="$PROJECT_DIR$/inprogress/Contacts_should_exist.html" />
         <option value="$PROJECT_DIR$/inprogress/should_contain_a_find_function.html" />
         <option value="$PROJECT_DIR$/inprogress/contacts_should_exist.html" />
+        <option value="$PROJECT_DIR$/needsreview/contacts/contacts.html" />
       </list>
     </option>
   </component>
@@ -109,6 +110,14 @@
               <option name="myItemId" value="frank-marco" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="needsreview" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="contacts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -117,10 +126,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="frank-marco" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="inprogress" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -232,16 +237,9 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/inprogress/should_contain_a_find_function.html">
+    <entry file="file://$PROJECT_DIR$/needsreview/contacts/contacts.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="8" selection-start="594" selection-end="594" vertical-scroll-proportion="0.47029704">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inprogress/contacts_should_exist.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="59" selection-start="2770" selection-end="2770" vertical-scroll-proportion="0.54468805">
+        <state line="525" column="13" selection-start="18282" selection-end="18282" vertical-scroll-proportion="11.193929">
           <folding />
         </state>
       </provider>

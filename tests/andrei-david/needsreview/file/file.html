@@ -1,0 +1,85 @@
+<!doctype html>
+<title>File Test</title>
+<script src="cordova-2.1.0.js"></script>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+  setup({explicit_done: true});
+
+  document.addEventListener("deviceready", function() {
+        var fileErrorMap = {
+          1: 'NOT_FOUND_ERR',
+          2: 'SECURITY_ERR',
+          3: 'ABORT_ERR',
+          4: 'NOT_READABLE_ERR',
+          5: 'ENCODING_ERR',
+          6: 'NO_MODIFICATION_ALLOWED_ERR',
+          7: 'INVALID_STATE_ERR',
+          8: 'SYNTAX_ERR',
+          9: 'INVALID_MODIFICATION_ERR',
+          10:'QUOTA_EXCEEDED_ERR',
+          11:'TYPE_MISMATCH_ERR',
+          12:'PATH_EXISTS_ERR'
+  };
+
+  test(function() {
+    assert_equals(FileError.NOT_FOUND_ERR,1);
+    assert_equals(FileError.SECURITY_ERR,2);
+    assert_equals(FileError.ABORT_ERR,3);
+    assert_equals(FileError.NOT_READABLE_ERR,4);
+    assert_equals(FileError.ENCODING_ERR,5);
+    assert_equals(FileError.NO_MODIFICATION_ALLOWED_ERR,6);
+    assert_equals(FileError.INVALID_STATE_ERR,7);
+    assert_equals(FileError.SYNTAX_ERR,8);
+    assert_equals(FileError.INVALID_MODIFICATION_ERR,9);
+    assert_equals(FileError.QUOTA_EXCEEDED_ERR,10);
+    assert_equals(FileError.TYPE_MISMATCH_ERR,11);
+    assert_equals(FileError.PATH_EXISTS_ERR,12);
+    }, 'File API FileError object should define FileError constants');
+
+  test(function(){
+      assert_equals(LocalFileSystem.TEMPORARY,0);
+      assert_equals(LocalFileSystem.PERSISTENT,1);
+      }, 'File API LocalFileSystem should define LocalFileSystem constants');
+
+  test(function(){
+      assert_true(window.requestFileSystem !== undefined && window.requestFileSystem !== null);
+      }, 'File API LocalFileSystem window.requestFileSystem should be defined');
+
+  var hasPersistentFilesystem = async_test('File API LocalFileSystem window.requestFileSystem should be able to retrieve a PERSISTENT file system');
+  hasPersistentFilesystem.step(function(){
+      var win = hasPersistentFilesystem.step_func(function(fileSystem){
+        assert_true(fileSystem !== undefined && fileSystem !== null);
+        assert_true(fileSystem.name !== undefined && fileSystem.name !== null);
+        assert_equals(fileSystem.name, "persistent");
+        assert_true(fileSystem.root !== undefined);
+        hasPersistentFilesystem.done();
+        });
+      var fail = hasPersistentFilesystem.step_func(function(module) {
+        assert_true(false, 'hasPersistentFilesystem should not fail');
+        hasPersistentFilesystem.done();
+        });
+      var id =  window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, win, fail);
+      });
+
+  var hasPersistentFilesystem = async_test('File API LocalFileSystem window.requestFileSystem should be able to retrieve a PERSISTENT file system');
+  hasPersistentFilesystem.step(function(){
+      var win = hasPersistentFilesystem.step_func(function(fileSystem){
+        assert_true(fileSystem !== undefined && fileSystem !== null);
+        assert_true(fileSystem.name !== undefined && fileSystem.name !== null);
+        assert_equals(fileSystem.name, "persistent");
+        assert_true(fileSystem.root !== undefined);
+        hasPersistentFilesystem.done();
+        });
+      var fail = hasPersistentFilesystem.step_func(function(module) {
+        assert_true(false, 'hasPersistentFilesystem should not fail');
+        hasPersistentFilesystem.done();
+        });
+      var id =  window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, win, fail);
+      });
+
+  done();
+  }, false);
+</script>
+

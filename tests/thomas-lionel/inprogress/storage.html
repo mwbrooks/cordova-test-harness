@@ -1,0 +1,191 @@
+<!doctype html>
+<title>PhoneGap Storage test</title>
+<script src="cordova-2.1.0.js"></script>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+  // FIXME? Original code does not try to clear at beginning or something
+  // It is ok if every test is successful, but might fail in some cases
+  setup({explicit_done: true});
+
+  document.addEventListener("deviceready", function() {
+
+    test(function() {
+      assert_true(typeof window.sessionStorage !== "undefined");
+      assert_true(typeof window.sessionStorage.length !== "undefined");
+      assert_true(typeof window.sessionStorage.key === "function");
+      assert_true(typeof window.sessionStorage.getItem === "function");
+      assert_true(typeof window.sessionStorage.setItem === "function");
+      assert_true(typeof window.sessionStorage.removeItem === "function");
+      assert_true(typeof window.sessionStorage.clear === "function");
+    }, "Session storage should exist");
+
+    test(function() {
+      assert_equals(window.sessionStorage.length, 0);
+      window.sessionStorage.setItem("key", "value");
+      assert_equals(window.sessionStorage.length, 1);
+      window.sessionStorage.removeItem("key");
+      assert_equals(window.sessionStorage.length, 0);
+    }, "Check length for session storage");
+
+    test(function() {
+      assert_equals(window.sessionStorage.key(0), null);
+      window.sessionStorage.setItem("test", "value");
+      assert_equals(window.sessionStorage.key(0), "test");
+      window.sessionStorage.removeItem("test");
+      assert_equals(window.sessionStorage.key(0), null);
+    }, "Check key for session storage");
+
+    test(function() {
+      assert_equals(window.sessionStorage.getItem("item"), null);
+      window.sessionStorage.setItem("item", "value");
+      assert_equals(window.sessionStorage.getItem("item"), "value");
+      window.sessionStorage.removeItem("item");
+      assert_equals(window.sessionStorage.getItem("item"), null);
+    }, "Check getItem for session storage");
+
+    test(function() {
+      assert_equals(window.sessionStorage.getItem("item"), null);
+      window.sessionStorage.setItem("item", "value");
+      assert_equals(window.sessionStorage.getItem("item"), "value");
+      window.sessionStorage.setItem("item", "newval");
+      assert_equals(window.sessionStorage.getItem("item"), "newval");
+      window.sessionStorage.removeItem("item");
+      assert_equals(window.sessionStorage.getItem("item"), null);
+    }, "Check setItem for session storage");
+
+    test(function() {
+      assert_equals(window.sessionStorage.getItem("item"), null);
+      window.sessionStorage.setItem("item", "value");
+      assert_equals(window.sessionStorage.getItem("item"), "value");
+      window.sessionStorage.removeItem("item");
+      assert_equals(window.sessionStorage.getItem("item"), null);
+    }, "Session storage can remove an item");
+
+    test(function() {
+      window.sessionStorage.setItem("item1", "value");
+      window.sessionStorage.setItem("item2", "value");
+      window.sessionStorage.setItem("item3", "value");
+      assert_equals(window.sessionStorage.length, 3);
+      window.sessionStorage.clear();
+      assert_equals(window.sessionStorage.length, 0);
+    }, "Check clear for session storage");
+
+    test(function() {
+      assert_true(typeof window.sessionStorage.item === "undefined");
+      window.sessionStorage.item = "value";
+      assert_equals(window.sessionStorage.item, "value");
+      window.sessionStorage.removeItem("item");
+      assert_true(typeof window.sessionStorage.item === "undefined");
+    }, "Check dot notation for session storage");
+
+    test(function() {
+      assert_true(typeof window.localStorage !== "undefined");
+      assert_true(typeof window.localStorage.length !== "undefined");
+      assert_true(typeof window.localStorage.key === "function");
+      assert_true(typeof window.localStorage.getItem === "function");
+      assert_true(typeof window.localStorage.setItem === "function");
+      assert_true(typeof window.localStorage.removeItem === "function");
+      assert_true(typeof window.localStorage.clear === "function");
+    }, "Local Storage should exist");
+
+    test(function() {
+      assert_equals(window.localStorage.length, 0);
+      window.localStorage.setItem("key", "value");
+      assert_equals(window.localStorage.length, 1);
+      window.localStorage.removeItem("key");
+      assert_equals(window.localStorage.length, 0);
+    }, "Check length for Local Storage");
+
+    test(function() {
+      assert_equals(window.localStorage.key(0), null);
+      window.localStorage.setItem("test", "value");
+      assert_equals(window.localStorage.key(0), "test");
+      window.localStorage.removeItem("test");
+      assert_equals(window.localStorage.key(0), null);
+    }, "Check key for Local Storage");
+
+    test(function() {
+      assert_equals(window.localStorage.getItem("item"), null);
+      window.localStorage.setItem("item", "value");
+      assert_equals(window.localStorage.getItem("item"), "value");
+      window.localStorage.removeItem("item");
+      assert_equals(window.localStorage.getItem("item"), null);
+    }, "Check getItem for Local Storage");
+
+    test(function() {
+      assert_equals(window.localStorage.getItem("item"), null);
+      window.localStorage.setItem("item", "value");
+      assert_equals(window.localStorage.getItem("item"), "value");
+      window.localStorage.setItem("item", "newval");
+      assert_equals(window.localStorage.getItem("item"), "newval");
+      window.localStorage.removeItem("item");
+      assert_equals(window.localStorage.getItem("item"), null);
+    }, "Check setItem for Local Storage");
+
+    test(function() {
+      assert_equals(window.localStorage.getItem("item"), null);
+      window.localStorage.setItem("item", "value");
+      assert_equals(window.localStorage.getItem("item"), "value");
+      window.localStorage.removeItem("item");
+      assert_equals(window.localStorage.getItem("item"), null);
+    }, "Check removeItem for Local Storage");
+
+    test(function() {
+      assert_equals(window.localStorage.getItem("item1"), null);
+      assert_equals(window.localStorage.getItem("item2"), null);
+      assert_equals(window.localStorage.getItem("item3"), null);
+      window.localStorage.setItem("item1", "value");
+      window.localStorage.setItem("item2", "value");
+      window.localStorage.setItem("item3", "value");
+      assert_equals(window.localStorage.length, 3);
+      window.localStorage.clear();
+      assert_equals(window.localStorage.length, 0);
+      assert_equals(window.localStorage.getItem("item1"), null);
+      assert_equals(window.localStorage.getItem("item2"), null);
+      assert_equals(window.localStorage.getItem("item3"), null);
+    }, "Check clear for Local Storage");
+
+    test(function() {
+      assert_true(typeof window.localStorage.item === "undefined");
+      window.localStorage.item = "value";
+      assert_equals(window.localStorage.item, "value");
+      window.localStorage.removeItem("item");
+      assert_true(typeof window.localStorage.item === "undefined");
+    }, "Check dot notation for Local Storage");
+
+    test(function() {
+      assert_true(typeof window.openDatabase === "function");
+    }, "HTML5 Storage should exist");
+
+
+    var test = async_test("HTML5 Storage should be able to create and drop tables");
+    var fail1 = test.step_func(function() {
+      assert_unreached("creating tables failed");
+    });
+    var fail2 = test.step_func(function() {
+      assert_unreached("dropping tables failed");
+    });
+    var win = test.step_func(function() {
+      test.done();
+    });
+
+    test.step(function() {
+      var db = openDatabase("Database", "1.0", "HTML5 Database API example", 5*1024*1024);
+      db.transaction(function(t) {
+        t.executeSql('CREATE TABLE IF NOT EXISTS foo(id int, name varchar(255));');
+        t.executeSql('CREATE TABLE IF NOT EXISTS foo2(id int, name varchar(255));');
+      }, fail1, step2);
+      function step2() {
+        db.transaction(function(t) {
+          t.executeSql('DROP TABLE foo;');
+          t.executeSql('DROP TABLE foo2');
+        }, fail2, win);
+      }
+    });
+
+    done();
+  }, false);
+
+</script>

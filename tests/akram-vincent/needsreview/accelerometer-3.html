@@ -1,0 +1,62 @@
+<!doctype html>
+<title>Simple Test</title>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<script src="cordova-2.1.0.js"></script>
+<div id="log"></div>
+
+<script>
+setup({explicit_done:true});
+
+function runAll () {
+    /**
+     * Utility: invokes done() on the async test and resets the id
+     */
+    function onDone (async_test, id) {
+        async_test.done();
+        navigator.accelerometer.clearWatch(id);
+    }
+
+    test(function() {
+        assert_true(navigator.accelerometer.clearWatch !== undefined);
+        assert_true(typeof navigator.accelerometer.clearWatch == 'function');
+    }, "clearWatch should exist");
+  
+
+    var clearWatchTest = async_test("clearWatch - should clear an existing watch");
+
+    clearWatchTest.step(function () {
+        var callCount = 0, id;
+        
+        function success () {
+            callCount++;
+            navigator.accelerometer.clearWatch(id);
+            
+            var onTimeout = clearWatchTest.step_func (function () {
+                try {
+                    assert_true(callCount === 1);
+                } finally {
+                    clearWatchTest.done();
+                }
+            });
+            
+            setTimeout(onTimeout, 300);
+        }
+        
+        function failure () {
+            try {
+                assert_true(false, "watchAcceleration should not fail");
+            } finally {
+                navigator.accelerometer.clearWatch(id);
+            }
+        }
+        
+        id = navigator.accelerometer.watchAcceleration(success, failure, {frequency: 100});
+
+    });
+    
+    done();
+}
+document.addEventListener("deviceready", runAll);
+
+</script>

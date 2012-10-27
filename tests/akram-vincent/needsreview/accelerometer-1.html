@@ -1,0 +1,210 @@
+<!doctype html>
+<title>Simple Test</title>
+<script src="resources/testharness.js"></script>
+<script src="resources/testharnessreport.js"></script>
+<script src="cordova-2.1.0.js"></script>
+<div id="log"></div>
+
+<!--
+  See James' slides for more details: http://hoppipolla.co.uk/talks/ttwf/testharness.html
+  -->
+  
+<!--
+  IMPORTANT: Create a symbolic link from your hard drive root directory to the 
+             Dropbox /HTML5/ so that the testharness.js reference above works 
+             without changes.
+             For example:
+             ln -s ~/Dropbox/TestTWF/MOBILE/resources /resources
+  -->
+  
+<script>
+setup({explicit_done:true});
+
+function runAll () {
+
+	/**
+     * Utility: invokes done() on the async test and resets the id
+     */
+    function onDone (async_test, id) {
+        async_test.done();
+        navigator.accelerometer.clearWatch(id);
+    }
+/*
+describe('Accelerometer (navigator.accelerometer)', function () {
+    it("should exist", function () {
+        expect(navigator.accelerometer).toBeDefined();
+    });*/
+	// TestHarness.JS
+	test(function () {
+		assert_not_equals(navigator.accelerometer, 'undefined');
+	}, "Accelerometer (navigator.accelerometer) Accelerometer defined");
+	
+/*
+describe("getCurrentAcceleration", function() {
+        it("should exist", function() {
+            expect(typeof navigator.accelerometer.getCurrentAcceleration).toBeDefined();
+            expect(typeof navigator.accelerometer.getCurrentAcceleration == 'function').toBe(true);
+        });*/
+		// TestHarness.JS
+		test(function () {
+			assert_not_equals(typeof navigator.accelerometer.getCurrentAcceleration, 'undefined');
+			assert_true(typeof navigator.accelerometer.getCurrentAcceleration == 'function');
+		}, "getCurrentAcceleration should exist");
+
+        /*it("success callback should be called with an Acceleration object", function() {
+            var win = jasmine.createSpy().andCallFake(function(a) {
+                    expect(a).toBeDefined();
+                    expect(a.x).toBeDefined();
+                    expect(typeof a.x == 'number').toBe(true);
+                    expect(a.y).toBeDefined();
+                    expect(typeof a.y == 'number').toBe(true);
+                    expect(a.z).toBeDefined();
+                    expect(typeof a.z == 'number').toBe(true);
+                    expect(a.timestamp).toBeDefined();
+                    expect(typeof a.timestamp).toBe('number');
+                }),
+                fail = jasmine.createSpy();
+
+            runs(function () {
+                navigator.accelerometer.getCurrentAcceleration(win, fail);
+            });
+	
+            waitsFor(function () { return win.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+	
+            runs(function () {
+                expect(fail).not.toHaveBeenCalled();
+            });
+        });*/
+		// TestHarness.JS
+		var hasValidParamTest = async_test("getCurrentAcceleration success callback should be called with an Acceleration object");
+
+		hasValidParamTest.step(function () {
+			var id;
+		
+			var success = hasValidParamTest.step_func(function (a) {
+				try{
+					assert_not_equals(a, 'undefined');
+					assert_not_equals(a.x, 'undefined');
+					assert_true(typeof a.x == 'number');
+					assert_not_equals(a.y, 'undefined');
+					assert_true(typeof a.y == 'number');
+					assert_not_equals(a.z, 'undefined');
+					assert_true(typeof a.z == 'number');
+					assert_not_equals(a.timestamp, 'undefined');
+					assert_equals(typeof a.timestamp, 'number');
+				} finally {
+					onDone(hasValidParamTest, id);
+				}
+			});
+			
+			var failure = hasValidParamTest.step_func(function (a) {
+				try { 
+					assert_true(false, 'getCurrentAcceleration should not fail');
+				} finally {
+					onDone(hasValidParamTest, id);
+				}
+			});
+		});
+    
+        id = navigator.accelerometer.getCurrentAcceleration(success, failure, {frequency: 500});
+		
+		/*
+        it("success callback Acceleration object should have (reasonable) values for x, y and z expressed in m/s^2", function() {
+            var reasonableThreshold = 15;
+            var win = jasmine.createSpy().andCallFake(function(a) {
+                    expect(a.x).toBeLessThan(reasonableThreshold);
+                    expect(a.x).toBeGreaterThan(reasonableThreshold * -1);
+                    expect(a.y).toBeLessThan(reasonableThreshold);
+                    expect(a.y).toBeGreaterThan(reasonableThreshold * -1);
+                    expect(a.z).toBeLessThan(reasonableThreshold);
+                    expect(a.z).toBeGreaterThan(reasonableThreshold * -1);
+                }),
+                fail = jasmine.createSpy();
+
+            runs(function () {
+                navigator.accelerometer.getCurrentAcceleration(win, fail);
+            });
+
+            waitsFor(function () { return win.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(fail).not.toHaveBeenCalled();
+            });
+        });*/
+		
+		var hasReasonableParam = async_test("getCurrentAcceleration success callback Acceleration object should have (reasonable) values for x, y and z expressed in m/s^2");
+
+		hasReasonableParam.step(function () {
+        var reasonableThreshold = 15,
+            id;
+    
+        var success = hasReasonableParam.step_func(function (a) {
+            try {
+                assert_true(a.x < reasonableThreshold);
+                assert_true(a.x > reasonableThreshold * -1);
+                assert_true(a.y < reasonableThreshold);
+                assert_true(a.y > reasonableThreshold * -1);
+                assert_true(a.z < reasonableThreshold);
+                assert_true(a.z > reasonableThreshold * -1);
+            } finally {    
+                onDone(hasReasonableParam, id);
+            }
+        });
+    
+        var failure = hasReasonableParam.step_func(function (a) {
+            assert_true(true == false, 'getCurrentAcceleration should not fail');
+            onDone(hasReasonableParam, id);
+        });
+		id = navigator.accelerometer.getCurrentAcceleration(success, failure, {frequency: 500});
+    
+		
+		/*
+        it("success callback Acceleration object should return a recent timestamp", function() {
+            var veryRecently = (new Date()).getTime();
+            // Need to check that dates returned are not vastly greater than a recent time stamp.
+            // In case the timestamps returned are ridiculously high
+            var reasonableTimeLimit = veryRecently + 5000; // 5 seconds from now
+            var win = jasmine.createSpy().andCallFake(function(a) {
+                    expect(a.timestamp).toBeGreaterThan(veryRecently);
+                    expect(a.timestamp).toBeLessThan(reasonableTimeLimit);
+                }),
+                fail = jasmine.createSpy();
+
+            runs(function () {
+                navigator.accelerometer.getCurrentAcceleration(win, fail);
+            });
+
+            waitsFor(function () { return win.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(fail).not.toHaveBeenCalled();
+            });
+        });*/
+		var hasRecentTimestamp = async_test("getCurrentAcceleration success callback Acceleration object should return a recent timestamp");
+		hasRecentTimestamp.step(function () {
+			var veryRecently = (new Date()).getTime(), id;
+			// Need to check that dates returned are not vastly greater than a recent time stamp.
+			// In case the timestamps returned are ridiculously high
+			var reasonableTimeLimit = veryRecently + 5000; // 5 seconds from now
+			var success = hasRecentTimestamp.step_func(function (a) {
+				try {
+					assert_true(a.timestamp > veryRecently);
+					assert_true(a.timestamp < reasonableTimeLimit);
+				}finally {    
+					onDone(hasRecentTimestamp, id);
+				}
+			});
+        });
+		
+		var failure = hasRecentTimestamp.step_func(function (a) {
+            assert_true(true == false, 'getCurrentAcceleration never called');
+            onDone(hasRecentTimestamp, id);
+        });
+        id = navigator.accelerometer.getCurrentAcceleration(success, failure, {frequency: 500});
+
+    });
+	done();
+}
+
+document.addEventListener("deviceready", runAll);
+</script>
